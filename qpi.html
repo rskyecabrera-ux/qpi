@@ -214,9 +214,11 @@ body::after {
 .tab-btn .t-grade.g-green { background: var(--green-bg); color: var(--green); }
 .tab-btn .t-grade.g-yellow { background: var(--yellow-bg); color: var(--yellow); }
 .tab-btn .t-grade.g-red { background: var(--red-bg); color: var(--red); }
+.tab-btn .t-grade.g-blue { background: var(--blue-bg); color: var(--blue); }
 .tab-btn.active .t-grade.g-green { background: rgba(45,122,79,0.3); color: #7fffa8; }
 .tab-btn.active .t-grade.g-yellow { background: rgba(255,200,0,0.2); color: #ffd966; }
 .tab-btn.active .t-grade.g-red { background: rgba(255,100,80,0.2); color: #ff9988; }
+.tab-btn.active .t-grade.g-blue { background: rgba(26,95,168,0.28); color: #9ac7ff; }
 
 /* MODE TOGGLE */
 .mode-bar {
@@ -553,12 +555,12 @@ body::after {
         </div>
         <div class="hrow">
           <span class="hrow-name"><span class="h-dot" id="dot-2nd"></span>Second Honors</span>
-          <span class="hrow-range">3.50 – 3.69</span>
+          <span class="hrow-range">3.35 – 3.69</span>
           <span class="hrow-status status-gray" id="hs-2nd">—</span>
         </div>
         <div class="hrow">
           <span class="hrow-name"><span class="h-dot gray"></span>No semestral honors</span>
-          <span class="hrow-range">&lt; 3.50</span>
+          <span class="hrow-range">&lt; 3.35</span>
           <span class="hrow-status status-gray" id="hs-none">—</span>
         </div>
       </div>
@@ -679,6 +681,9 @@ const maxScores = SUBJECTS.map(s => s.requirements.map((r,ri) => r.defaultMax));
 let currentMode = 'actual';
 let activeTab = 0;
 
+const FIRST_HONORS_MIN = 3.70;
+const SECOND_HONORS_MIN = 3.35;
+
 function getScores(si, ri) {
   if (currentMode === 'scenario' && scenarioScores[si][ri] !== null) return scenarioScores[si][ri];
   return actualScores[si][ri];
@@ -707,8 +712,8 @@ function letterColor(l) {
   return m[l] || 'gray';
 }
 function qpiColor(q) {
-  if (q >= 3.70) return 'green';
-  if (q >= 3.50) return 'blue';
+  if (q >= FIRST_HONORS_MIN) return 'green';
+  if (q >= SECOND_HONORS_MIN) return 'blue';
   if (q >= 3.00) return 'yellow';
   if (q > 0) return 'red';
   return 'red';
@@ -875,7 +880,6 @@ function onMaxChange(si, ri, val) {
     document.getElementById(`maxshow-${si}-${ri}`).textContent = num;
     const scoreEl = document.getElementById(`score-${si}-${ri}`);
     scoreEl.max = num;
-    // clamp existing score
     const existing = currentMode === 'scenario' ? scenarioScores[si][ri] : actualScores[si][ri];
     if (existing !== null && existing > num) {
       if (currentMode === 'scenario') scenarioScores[si][ri] = num;
@@ -908,7 +912,6 @@ function updateSubject(si) {
   const subj = SUBJECTS[si];
   const st = subjectStats(si);
 
-  // Per-row updates
   subj.requirements.forEach((req, ri) => {
     const raw = getScores(si, ri);
     const max = maxScores[si][ri];
@@ -930,7 +933,6 @@ function updateSubject(si) {
     }
   });
 
-  // Subject header
   const qpiEl = document.getElementById(`sg-qpi-${si}`);
   const letEl = document.getElementById(`sg-letter-${si}`);
   const confEl = document.getElementById(`sg-conf-${si}`);
@@ -948,7 +950,6 @@ function updateSubject(si) {
     covVal.textContent = '0%';
     covLabel.innerHTML = `You've entered <strong>0%</strong> of this subject's graded components`;
   } else {
-    const pct = st.projectedPct;
     const letter = st.letter;
     const color = letterColor(letter);
     const covPct = Math.round(st.coverage * 100);
@@ -965,7 +966,6 @@ function updateSubject(si) {
     covLabel.innerHTML = `You've entered <strong>${covPct}%</strong> of this subject's graded components — ${st.confLabel}`;
   }
 
-  // Tab grade
   const tabGrade = document.getElementById(`tab-grade-${si}`);
   if (st.letter) {
     tabGrade.textContent = st.letter;
@@ -975,17 +975,15 @@ function updateSubject(si) {
     tabGrade.className = 't-grade';
   }
 
-  // Risk meter
   const riskInd = document.getElementById(`risk-ind-${si}`);
   if (st.coverage > 0) {
     const qpi = st.qpi;
-    const risk = qpi >= 3.70 ? 5 : qpi >= 3.50 ? 20 : qpi >= 3.00 ? 40 : qpi >= 2.00 ? 65 : 85;
+    const risk = qpi >= FIRST_HONORS_MIN ? 5 : qpi >= SECOND_HONORS_MIN ? 20 : qpi >= 3.00 ? 40 : qpi >= 2.00 ? 65 : 85;
     riskInd.style.left = risk + '%';
   } else {
     riskInd.style.left = '50%';
   }
 
-  // What do I need
   if (currentMode === 'need') renderNeedPanel(si);
 }
 
@@ -1026,7 +1024,6 @@ function renderNeedPanel(si) {
       feas = 'feas-impossible';
     } else {
       const max = maxScores[si];
-      // Find next unfilled requirement
       const nextUnfilled = subj.requirements.findIndex((r, ri) => getScores(si, ri) === null);
       const nextReq = nextUnfilled >= 0 ? subj.requirements[nextUnfilled] : null;
       const nextMax = nextUnfilled >= 0 ? maxScores[si][nextUnfilled] : null;
@@ -1041,7 +1038,7 @@ function renderNeedPanel(si) {
 
     html += `<div class="need-card">
       <div class="nc-target">To finish with <strong>${t.label}</strong></div>
-      <div class="nc-score ${feas === 'feas-impossible' ? 'style="color:var(--text3)"' : ''}">${score}</div>
+      <div class="nc-score" ${feas === 'feas-impossible' ? 'style="color:var(--text3)"' : ''}>${score}</div>
       <div class="nc-desc">${desc}</div>
       <span class="nc-feasibility ${feas}">${feasLabel}</span>
     </div>`;
@@ -1053,7 +1050,6 @@ function renderNeedPanel(si) {
 function updateAll() {
   const ov = overallStats();
 
-  // Dashboard QPI
   const qpiEl = document.getElementById('dash-qpi');
   if (ov.semQPI !== null) {
     qpiEl.textContent = ov.semQPI.toFixed(3);
@@ -1064,7 +1060,16 @@ function updateAll() {
   }
 
   document.getElementById('dm-qpi').textContent = ov.semQPI ? ov.semQPI.toFixed(3) : '—';
-  document.getElementById('dm-qpi-sub').textContent = ov.semQPI ? (ov.semQPI >= 3.70 ? '🎉 First Honors range' : ov.semQPI >= 3.50 ? '👍 Second Honors range' : ov.semQPI >= 3.00 ? 'Above passing' : 'Below 3.00') : 'not enough data';
+  document.getElementById('dm-qpi-sub').textContent = ov.semQPI
+    ? (ov.semQPI >= FIRST_HONORS_MIN
+        ? '🎉 First Honors range'
+        : ov.semQPI >= SECOND_HONORS_MIN
+        ? '👍 Second Honors range'
+        : ov.semQPI >= 3.00
+        ? 'Above passing'
+        : 'Below 3.00')
+    : 'not enough data';
+
   document.getElementById('dm-units').textContent = Math.round(ov.enteredUnits) + '/20';
   document.getElementById('dm-qp').textContent = ov.semQPI ? (ov.semQPI * ov.totalUnits).toFixed(2) : '—';
 
@@ -1081,7 +1086,6 @@ function updateAll() {
 
   document.getElementById('conf-text').textContent = ov.confLabel;
 
-  // Highest opportunity subject
   let maxOpportunity = -1, maxOppIdx = -1;
   SUBJECTS.forEach((s, si) => {
     const st = subjectStats(si);
@@ -1091,7 +1095,6 @@ function updateAll() {
   document.getElementById('dm-impact').textContent = maxOppIdx >= 0 ? SUBJECTS[maxOppIdx].shortCode : '—';
   document.getElementById('dm-impact-sub').textContent = maxOppIdx >= 0 ? 'most ungraded weight' : '';
 
-  // Honor pill and status
   updateHonorBanner(ov.semQPI, ov.bestQPI, ov.overallCoverage);
   updateGapAnalysis(ov);
   updateInsights(ov);
@@ -1110,35 +1113,27 @@ function updateHonorBanner(semQPI, bestQPI, coverage) {
     [hs1,hs2,hsN].forEach(h => { h.textContent='—'; h.className='hrow-status status-gray'; });
     return;
   }
-  if (semQPI >= 3.70) {
+  if (semQPI >= FIRST_HONORS_MIN) {
     pill.className = 'honor-pill first'; pill.textContent = '★ First Honors — Dean\'s List';
     msg.innerHTML = `<strong>You're on track for First Honors.</strong> ${coverage < 0.5 ? 'Still early — keep maintaining this pace.' : coverage < 0.8 ? "You're doing great. Stay focused on remaining outputs." : "Almost there. Your hard work is showing."}`;
     d1.className='h-dot green'; d2.className='h-dot green';
     hs1.textContent='On track'; hs1.className='hrow-status status-green';
     hs2.textContent='On track'; hs2.className='hrow-status status-green';
     hsN.textContent='Not applicable'; hsN.className='hrow-status status-gray';
-  } else if (semQPI >= 3.50) {
+  } else if (semQPI >= SECOND_HONORS_MIN) {
     pill.className = 'honor-pill second'; pill.textContent = '◆ Second Honors';
-    msg.innerHTML = `<strong>You're in Second Honors territory.</strong> First Honors (3.70) is ${(3.70 - semQPI).toFixed(3)} QPI away — ${coverage < 0.5 ? "still very reachable!" : "tough but worth pushing for."}`;
+    msg.innerHTML = `<strong>You're in Second Honors territory.</strong> First Honors (${FIRST_HONORS_MIN.toFixed(2)}) is ${(FIRST_HONORS_MIN - semQPI).toFixed(3)} QPI away — ${coverage < 0.5 ? "still very reachable!" : "tough but worth pushing for."}`;
     d1.className='h-dot yellow'; d2.className='h-dot green';
     hs1.textContent='Near'; hs1.className='hrow-status status-yellow';
     hs2.textContent='On track'; hs2.className='hrow-status status-green';
     hsN.textContent='Not applicable'; hsN.className='hrow-status status-gray';
-  } else if (semQPI >= 3.35) {
+  } else {
     pill.className = 'honor-pill near'; pill.textContent = '△ Within reach';
-    msg.innerHTML = `<strong>You're ${(3.50 - semQPI).toFixed(3)} away from Second Honors.</strong> ${coverage < 0.5 ? "There's still plenty of room to push your grades up." : "Focus on your highest-weight remaining requirements."}`;
+    msg.innerHTML = `<strong>You're ${(SECOND_HONORS_MIN - semQPI).toFixed(3)} away from Second Honors.</strong> ${coverage < 0.5 ? "There's still plenty of room to push your grades up." : "Focus on your highest-weight remaining requirements."}`;
     d1.className='h-dot gray'; d2.className='h-dot yellow';
     hs1.textContent='Not yet'; hs1.className='hrow-status status-gray';
     hs2.textContent='Close'; hs2.className='hrow-status status-yellow';
     hsN.textContent='Current'; hsN.className='hrow-status status-yellow';
-  } else {
-    pill.className = 'honor-pill none'; pill.textContent = '○ QPI ' + semQPI.toFixed(3);
-    const bestMsg = bestQPI >= 3.50 ? " Best case: you can still reach Second Honors if you ace what's left." : "";
-    msg.innerHTML = `<strong>There's room to recover.</strong> ${coverage < 0.5 ? "You're still early — a strong second half can change this significantly." + bestMsg : "Focus on your heaviest remaining requirements to maximize impact." + bestMsg}`;
-    d1.className='h-dot gray'; d2.className='h-dot gray';
-    hs1.textContent='Not yet'; hs1.className='hrow-status status-red';
-    hs2.textContent='Not yet'; hs2.className='hrow-status status-red';
-    hsN.textContent='Current'; hsN.className='hrow-status status-red';
   }
 }
 
@@ -1153,8 +1148,8 @@ function updateGapAnalysis(ov) {
   const ungradedUnits = ungraded.reduce((s,x) => s+x.units, 0);
 
   const gaps = [
-    {label:'First Honors / Dean\'s List', target:3.70, emoji:'🏆'},
-    {label:'Second Honors', target:3.50, emoji:'🎓'},
+    {label:'First Honors / Dean\'s List', target:FIRST_HONORS_MIN, emoji:'🏆'},
+    {label:'Second Honors', target:SECOND_HONORS_MIN, emoji:'🎓'},
     {label:'Cum Laude (cumulative)', target:3.50, emoji:'🎖️', note:'(cumulative — plan ahead)'},
     {label:'Magna Cum Laude (cumulative)', target:3.70, emoji:'🏅', note:'(cumulative — plan ahead)'},
   ];
@@ -1167,7 +1162,7 @@ function updateGapAnalysis(ov) {
     let title, body, statusClass, status;
     if (ov.semQPI >= g.target) {
       title = `You're on track for ${g.label} ✓`;
-      body = `Your current projected QPI of ${ov.semQPI.toFixed(3)} already meets the ${g.target} threshold. Just maintain your pace.`;
+      body = `Your current projected QPI of ${ov.semQPI.toFixed(3)} already meets the ${g.target.toFixed(2)} threshold. Just maintain your pace.`;
       statusClass = 'status-green'; status = 'Achieved';
     } else if (neededPerUnit === null || ungradedUnits === 0) {
       title = `${g.label} — not achievable this semester`;
@@ -1175,7 +1170,7 @@ function updateGapAnalysis(ov) {
       statusClass = 'status-gray'; status = 'Locked out';
     } else if (neededPerUnit > 4.0) {
       title = `${g.label} is out of reach this semester`;
-      body = `Even with perfect scores on everything remaining, your QPI won't reach ${g.target}. Focus on next semester.`;
+      body = `Even with perfect scores on everything remaining, your QPI won't reach ${g.target.toFixed(2)}. Focus on next semester.`;
       statusClass = 'status-red'; status = 'Not possible';
     } else {
       const gradeLabel = neededPerUnit >= 3.87 ? 'Summa-level (near-perfect) work' :
@@ -1219,7 +1214,6 @@ function updateInsights(ov) {
     return;
   }
 
-  // Find highest-opportunity subject (most units × least coverage)
   let maxOpp = -1, maxOppSi = -1;
   let lowestQPISi = -1, lowestQPI = 5;
   let highestQPISi = -1, highestQPI = -1;
@@ -1238,25 +1232,25 @@ function updateInsights(ov) {
 
   if (maxOppSi >= 0) {
     const s = SUBJECTS[maxOppSi]; const st = subjectStats(maxOppSi);
-    insights.push(`<div class="insight-chip focus"><span class="ic-emoji">🎯</span><strong>Biggest opportunity: ${s.shortCode}</strong><br>${Math.round((1-st.coverage)*100)}% of its grade is still open — high leverage.`);
+    insights.push(`<div class="insight-chip focus"><span class="ic-emoji">🎯</span><strong>Biggest opportunity: ${s.shortCode}</strong><br>${Math.round((1-st.coverage)*100)}% of its grade is still open — high leverage.</div>`);
   }
   if (highestQPISi >= 0 && subjectStats(highestQPISi).coverage > 0.2) {
     const s = SUBJECTS[highestQPISi];
-    insights.push(`<div class="insight-chip"><span class="ic-emoji">💪</span><strong>${s.shortCode} is pulling you up</strong><br>Projected ${subjectStats(highestQPISi).qpi.toFixed(2)} QPI — your strongest subject right now.`);
+    insights.push(`<div class="insight-chip"><span class="ic-emoji">💪</span><strong>${s.shortCode} is pulling you up</strong><br>Projected ${subjectStats(highestQPISi).qpi.toFixed(2)} QPI — your strongest subject right now.</div>`);
   }
   if (lowestQPISi >= 0 && subjectStats(lowestQPISi).coverage > 0.2 && lowestQPI < 3.0) {
     const s = SUBJECTS[lowestQPISi];
-    insights.push(`<div class="insight-chip"><span class="ic-emoji">⚠️</span><strong>${s.shortCode} needs attention</strong><br>Projected ${lowestQPI.toFixed(2)} QPI — your lowest right now. Check remaining requirements.`);
+    insights.push(`<div class="insight-chip"><span class="ic-emoji">⚠️</span><strong>${s.shortCode} needs attention</strong><br>Projected ${lowestQPI.toFixed(2)} QPI — your lowest right now. Check remaining requirements.</div>`);
   }
   if (mostLockedSi >= 0 && mostLockedCov > 0.7) {
     const s = SUBJECTS[mostLockedSi];
-    insights.push(`<div class="insight-chip"><span class="ic-emoji">🔒</span><strong>${s.shortCode} is mostly locked in</strong><br>${Math.round(mostLockedCov*100)}% graded — not much left to change here.`);
+    insights.push(`<div class="insight-chip"><span class="ic-emoji">🔒</span><strong>${s.shortCode} is mostly locked in</strong><br>${Math.round(mostLockedCov*100)}% graded — not much left to change here.</div>`);
   }
   if (ov.semQPI && ov.bestQPI - ov.semQPI > 0.2) {
-    insights.push(`<div class="insight-chip"><span class="ic-emoji">🚀</span><strong>You have upside</strong><br>Best case is ${ov.bestQPI.toFixed(2)} if you ace all remaining — that's ${(ov.bestQPI - ov.semQPI).toFixed(2)} above current.`);
+    insights.push(`<div class="insight-chip"><span class="ic-emoji">🚀</span><strong>You have upside</strong><br>Best case is ${ov.bestQPI.toFixed(2)} if you ace all remaining — that's ${(ov.bestQPI - ov.semQPI).toFixed(2)} above current.</div>`);
   }
 
-  strip.innerHTML = insights.slice(0,4).map(i => i + '</div>').join('') || `<div class="insight-chip"><span class="ic-emoji">📊</span>Keep entering grades for personalized insights.</div>`;
+  strip.innerHTML = insights.slice(0,4).join('') || `<div class="insight-chip"><span class="ic-emoji">📊</span>Keep entering grades for personalized insights.</div>`;
 }
 
 function setMode(mode) {
@@ -1268,7 +1262,6 @@ function setMode(mode) {
   SUBJECTS.forEach((_,si) => {
     const np = document.getElementById(`need-panel-${si}`);
     if (np) np.style.display = mode === 'need' ? 'block' : 'none';
-    // Sync score inputs to show scenario vs actual
     SUBJECTS[si].requirements.forEach((_, ri) => {
       const el = document.getElementById(`score-${si}-${ri}`);
       if (!el) return;
