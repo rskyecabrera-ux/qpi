@@ -19,7 +19,6 @@
   --text3: #a09b94;
   --ink: #2c2820;
 
-  /* status colors */
   --green: #2d7a4f;
   --green-bg: #edf7f1;
   --green-border: rgba(45,122,79,0.2);
@@ -54,7 +53,6 @@ body {
   line-height: 1.6;
 }
 
-/* DECORATIVE BG */
 body::before {
   content: '';
   position: fixed;
@@ -74,7 +72,6 @@ body::after {
 
 .app { position: relative; z-index: 1; max-width: 1040px; margin: 0 auto; padding: 2rem 1.25rem 5rem; }
 
-/* ===== HEADER ===== */
 .site-header {
   display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem;
@@ -95,7 +92,6 @@ body::after {
   border: 1px solid var(--border); letter-spacing: 0.04em;
 }
 
-/* ===== DASHBOARD ===== */
 .dashboard {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -149,7 +145,6 @@ body::after {
 }
 .confidence-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
-/* Dashboard metric row */
 .dash-metrics {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -164,7 +159,6 @@ body::after {
 .dash-metric.highlight { background: var(--accent-light); }
 .dash-metric.highlight .m-val { color: var(--accent); }
 
-/* Insight strip */
 .insight-strip {
   margin-top: 1.25rem;
   display: flex; gap: 8px; flex-wrap: wrap;
@@ -183,7 +177,6 @@ body::after {
 .insight-chip.focus { background: #fff8f5; border-color: rgba(232,82,10,0.2); color: var(--accent); }
 .insight-chip.focus strong { color: var(--accent); }
 
-/* ===== TABS ===== */
 .nav-section { margin-bottom: 1rem; }
 .nav-label { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
 .tabs-scroll { overflow-x: auto; padding-bottom: 4px; }
@@ -220,7 +213,6 @@ body::after {
 .tab-btn.active .t-grade.g-red { background: rgba(255,100,80,0.2); color: #ff9988; }
 .tab-btn.active .t-grade.g-blue { background: rgba(26,95,168,0.28); color: #9ac7ff; }
 
-/* MODE TOGGLE */
 .mode-bar {
   display: flex; gap: 6px; margin-bottom: 1.25rem;
   background: var(--bg2); border: 1px solid var(--border);
@@ -239,7 +231,6 @@ body::after {
   border: 1px solid var(--border);
 }
 
-/* ===== SUBJECT PANEL ===== */
 .subject-panel { display: none; }
 .subject-panel.active { display: block; }
 
@@ -271,7 +262,6 @@ body::after {
 .subj-grade-block .sg-confidence { font-size: 11px; color: var(--text3); margin-top: 4px; font-family: 'DM Mono', monospace; }
 .subj-grade-block .sg-coverage { font-size: 12px; color: var(--text2); margin-top: 2px; }
 
-/* Coverage bar */
 .coverage-bar-wrap { padding: 0 1.5rem 1rem; border-bottom: 1px solid var(--border); background: var(--bg2); }
 .cov-header { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; margin-bottom: 6px; font-size: 12px; color: var(--text2); }
 .cov-val { font-family: 'DM Mono', monospace; font-weight: 500; color: var(--text); }
@@ -282,7 +272,6 @@ body::after {
 .cov-fill.med { background: var(--yellow); }
 .cov-fill.low { background: var(--red); }
 
-/* Requirement rows */
 .reqs-table { width: 100%; }
 .req-header-row {
   display: grid; gap: 10px;
@@ -300,7 +289,6 @@ body::after {
 .req-data-row:last-child { border-bottom: none; }
 .req-data-row:hover { background: var(--bg2); }
 
-/* grid: name / impact-bar / max-input / score-input / pct / weighted */
 .req-grid { grid-template-columns: 1fr 80px 70px 110px 55px 60px; }
 
 .req-name-wrap .rn { font-size: 13px; color: var(--text); font-weight: 500; }
@@ -310,13 +298,11 @@ body::after {
   display: inline-block;
 }
 
-/* Impact bar */
 .impact-wrap { display: flex; align-items: center; gap: 5px; }
 .impact-bar-track { flex: 1; height: 5px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
 .impact-bar-fill { height: 100%; border-radius: 3px; background: var(--blue); transition: width 0.3s; }
 .impact-label { font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; white-space: nowrap; }
 
-/* Inputs */
 .score-input-wrap { display: flex; align-items: center; gap: 4px; }
 .score-input {
   width: 62px; background: var(--bg2); border: 1px solid var(--border2);
@@ -347,12 +333,10 @@ body::after {
 .weighted-val { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text3); text-align: right; }
 .weighted-val.filled { color: var(--accent); font-weight: 500; }
 
-/* scenario diff */
 .scenario-diff { font-size: 10px; font-family: 'DM Mono', monospace; }
 .scenario-diff.up { color: var(--green); }
 .scenario-diff.down { color: var(--red); }
 
-/* ===== WHAT DO I NEED PANEL ===== */
 .need-panel { padding: 1.5rem; border-top: 1px solid var(--border); background: var(--bg2); }
 .need-panel h3 { font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 500; margin-bottom: 12px; color: var(--ink); }
 .need-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
@@ -376,7 +360,6 @@ body::after {
 .feas-extreme { background: var(--red-bg); color: var(--red); }
 .feas-impossible { background: var(--bg3); color: var(--text3); }
 
-/* ===== SCENARIO MODE ===== */
 .scenario-bar {
   background: #fff8f5; border: 1px solid rgba(232,82,10,0.2);
   border-radius: var(--radius); padding: 10px 1.5rem;
@@ -392,14 +375,12 @@ body::after {
   padding: 2px 8px; border-radius: 5px;
 }
 
-/* ===== RISK METER ===== */
 .risk-meter-wrap { padding: 0 1.5rem 1.25rem; }
 .risk-label { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; margin-top: 12px; }
 .risk-track { height: 8px; border-radius: 5px; background: linear-gradient(to right, var(--green), #aadd44, #f5c842, #f08030, var(--red)); overflow: hidden; position: relative; margin-bottom: 4px; }
 .risk-indicator { position: absolute; top: -3px; width: 14px; height: 14px; background: var(--ink); border-radius: 50%; border: 2px solid white; transform: translateX(-50%); transition: left 0.5s ease; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
 .risk-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; }
 
-/* ===== HONORS SECTION ===== */
 .honors-section { margin-top: 2.5rem; }
 .section-title { font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
 .section-sub { font-size: 12px; color: var(--text2); margin-bottom: 1.25rem; }
@@ -421,7 +402,6 @@ body::after {
 .h-dot.red { background: var(--red); }
 .h-dot.gray { background: var(--text3); }
 
-/* Gap analysis */
 .gap-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-top: 1rem; }
 .gap-card h4 { font-size: 12px; color: var(--text2); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; font-family: 'DM Mono', monospace; margin-bottom: 1rem; }
 .gap-item { display: flex; gap: 1rem; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
@@ -432,7 +412,6 @@ body::after {
 .gap-body { font-size: 12px; color: var(--text2); line-height: 1.5; }
 .gap-status { font-size: 11px; font-family: 'DM Mono', monospace; padding: 2px 8px; border-radius: 5px; white-space: nowrap; margin-left: auto; flex-shrink: 0; }
 
-/* Disclaimer */
 .disclaimer { background: var(--purple-bg); border: 1px solid var(--purple-border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-top: 1rem; font-size: 12px; color: var(--purple); line-height: 1.6; }
 .disclaimer strong { font-weight: 600; }
 
@@ -448,7 +427,6 @@ body::after {
 <body>
 <div class="app">
 
-  <!-- HEADER -->
   <div class="site-header">
     <div class="logo">
       <span class="logo-mark">GradeMapper</span>
@@ -461,7 +439,6 @@ body::after {
     </div>
   </div>
 
-  <!-- DASHBOARD -->
   <div class="dashboard">
     <div class="dashboard-top">
       <div class="qpi-big">
@@ -516,13 +493,11 @@ body::after {
     </div>
   </div>
 
-  <!-- SUBJECT NAVIGATION -->
   <div class="nav-section">
     <div class="nav-label">Your subjects</div>
     <div class="tabs-scroll"><div class="tabs" id="tabs"></div></div>
   </div>
 
-  <!-- MODE BAR -->
   <div style="display:flex; align-items:center; gap:12px; margin-bottom:1.25rem; flex-wrap:wrap;">
     <div class="mode-bar">
       <button class="mode-btn active" id="mode-actual" onclick="setMode('actual')">📊 Actual scores</button>
@@ -538,10 +513,8 @@ body::after {
     </div>
   </div>
 
-  <!-- SUBJECT PANELS -->
   <div id="panels"></div>
 
-  <!-- HONORS SECTION -->
   <div class="honors-section">
     <div class="section-title">Honors tracker</div>
     <div class="section-sub">Semestral standing is computed from your projected QPI this semester. Latin honors are cumulative — this is just one piece of the picture.</div>
@@ -593,9 +566,30 @@ body::after {
 </div>
 
 <script>
+const DEFAULT_GRADE_SCALE = [
+  { min: 92, letter: 'A', qpi: 4.00 },
+  { min: 87, letter: 'B+', qpi: 3.50 },
+  { min: 83, letter: 'B', qpi: 3.00 },
+  { min: 79, letter: 'C+', qpi: 2.50 },
+  { min: 75, letter: 'C', qpi: 2.00 },
+  { min: 70, letter: 'D', qpi: 1.00 },
+  { min: 0, letter: 'F', qpi: 0.00 },
+];
+
+const MATH_GRADE_SCALE = [
+  { min: 92, letter: 'A', qpi: 4.00 },
+  { min: 86, letter: 'B+', qpi: 3.50 },
+  { min: 77, letter: 'B', qpi: 3.00 },
+  { min: 69, letter: 'C+', qpi: 2.50 },
+  { min: 60, letter: 'C', qpi: 2.00 },
+  { min: 50, letter: 'D', qpi: 1.00 },
+  { min: 0, letter: 'F', qpi: 0.00 },
+];
+
 const SUBJECTS = [
   {
     code:"MATH 31.1", shortCode:"MATH31.1", name:"Mathematical Analysis IA", instructor:"Ray Yap", units:3,
+    gradeScale: MATH_GRADE_SCALE,
     requirements:[
       {name:"Long Exam 1", weight:30, defaultMax:120},
       {name:"Long Exam 2", weight:30, defaultMax:120},
@@ -605,6 +599,7 @@ const SUBJECTS = [
   },
   {
     code:"MATH 31.2", shortCode:"MATH31.2", name:"Mathematical Analysis IB", instructor:"Ray Yap", units:3,
+    gradeScale: MATH_GRADE_SCALE,
     requirements:[
       {name:"Long Exam 1", weight:30, defaultMax:120},
       {name:"Long Exam 2", weight:30, defaultMax:120},
@@ -614,6 +609,7 @@ const SUBJECTS = [
   },
   {
     code:"PEPC 11.05", shortCode:"PEPC", name:"Functional Training", instructor:"Monica L. Chavez", units:2,
+    gradeScale: DEFAULT_GRADE_SCALE,
     requirements:[
       {name:"Mobility Flow Test", weight:10, defaultMax:50},
       {name:"Loaded Carry Test", weight:15, defaultMax:50},
@@ -627,6 +623,7 @@ const SUBJECTS = [
   },
   {
     code:"SOC SC 11", shortCode:"SOCSC", name:"Understanding the Self", instructor:"Jean Arielle K. Bactat", units:3,
+    gradeScale: DEFAULT_GRADE_SCALE,
     requirements:[
       {name:"Quizzes (Modules 1–4)", weight:40, defaultMax:100},
       {name:"Do Good Project", weight:10, defaultMax:100},
@@ -638,6 +635,7 @@ const SUBJECTS = [
   },
   {
     code:"THEO 11", shortCode:"THEO", name:"Faith, Spirituality & the Church", instructor:"Annelle G. Sabanal, PhD", units:3,
+    gradeScale: DEFAULT_GRADE_SCALE,
     requirements:[
       {name:"Faith Narrative", weight:20, defaultMax:100},
       {name:"Worksheets & Quizzes", weight:20, defaultMax:100},
@@ -651,6 +649,7 @@ const SUBJECTS = [
   },
   {
     code:"ENGL 11", shortCode:"ENGL", name:"Purposive Communication", instructor:"Wilzen D. Bermoy, M.Ed.", units:3,
+    gradeScale: DEFAULT_GRADE_SCALE,
     requirements:[
       {name:"Process Activities (Modules 1–2)", weight:20, defaultMax:100},
       {name:"Major Task 1: Personal Reflection Essay", weight:20, defaultMax:100},
@@ -662,6 +661,7 @@ const SUBJECTS = [
   },
   {
     code:"FILI 12", shortCode:"FILI", name:"Malayuning Komunikasyon", instructor:"Alvin B. Yapan, PhD", units:3,
+    gradeScale: DEFAULT_GRADE_SCALE,
     requirements:[
       {name:"Kritikal na Pagsusulit — Modyul 1", weight:15, defaultMax:100},
       {name:"Kritikal na Pagsusulit — Modyul 2", weight:15, defaultMax:100},
@@ -674,7 +674,6 @@ const SUBJECTS = [
   },
 ];
 
-// State
 const actualScores = SUBJECTS.map(s => s.requirements.map(() => null));
 const scenarioScores = SUBJECTS.map(s => s.requirements.map(() => null));
 const maxScores = SUBJECTS.map(s => s.requirements.map((r,ri) => r.defaultMax));
@@ -689,24 +688,23 @@ function getScores(si, ri) {
   return actualScores[si][ri];
 }
 
-function pctToQPI(pct) {
-  if (pct >= 92) return 4.00;
-  if (pct >= 87) return 3.50;
-  if (pct >= 83) return 3.00;
-  if (pct >= 79) return 2.50;
-  if (pct >= 75) return 2.00;
-  if (pct >= 70) return 1.00;
-  return 0.00;
+function getGradeScale(si) {
+  return SUBJECTS[si].gradeScale || DEFAULT_GRADE_SCALE;
 }
-function pctToLetter(pct) {
-  if (pct >= 92) return 'A';
-  if (pct >= 87) return 'B+';
-  if (pct >= 83) return 'B';
-  if (pct >= 79) return 'C+';
-  if (pct >= 75) return 'C';
-  if (pct >= 70) return 'D';
-  return 'F';
+
+function pctToGrade(si, pct) {
+  const scale = getGradeScale(si);
+  return scale.find(g => pct >= g.min) || scale[scale.length - 1];
 }
+
+function pctToQPI(si, pct) {
+  return pctToGrade(si, pct).qpi;
+}
+
+function pctToLetter(si, pct) {
+  return pctToGrade(si, pct).letter;
+}
+
 function letterColor(l) {
   const m = {'A':'green','B+':'green','B':'blue','C+':'yellow','C':'yellow','D':'red','F':'red'};
   return m[l] || 'gray';
@@ -719,7 +717,6 @@ function qpiColor(q) {
   return 'red';
 }
 
-// Compute per-subject stats
 function subjectStats(si) {
   const subj = SUBJECTS[si];
   let enteredWeight = 0, weightedSum = 0;
@@ -733,19 +730,17 @@ function subjectStats(si) {
     }
   });
   const totalWeight = subj.requirements.reduce((s,r) => s + r.weight, 0);
-  const coverage = enteredWeight / totalWeight; // 0–1
+  const coverage = enteredWeight / totalWeight;
   const projectedPct = enteredWeight > 0 ? (weightedSum / enteredWeight) * 100 : null;
-  const qpi = projectedPct !== null ? pctToQPI(projectedPct) : null;
-  const letter = projectedPct !== null ? pctToLetter(projectedPct) : null;
-  const completedWeight = weightedSum; // weighted % actually earned so far
-  // Best case: assume 100% on all remaining
+  const qpi = projectedPct !== null ? pctToQPI(si, projectedPct) : null;
+  const letter = projectedPct !== null ? pctToLetter(si, projectedPct) : null;
+  const completedWeight = weightedSum;
   const bestWeighted = weightedSum + (totalWeight - enteredWeight);
   const bestPct = (bestWeighted / totalWeight) * 100;
-  const bestQPI = pctToQPI(bestPct);
-  // Worst case: assume 0 on remaining
+  const bestQPI = pctToQPI(si, bestPct);
   const worstPct = (weightedSum / totalWeight) * 100;
-  const worstQPI = pctToQPI(worstPct);
-  // Confidence
+  const worstQPI = projectedPct !== null ? pctToQPI(si, worstPct) : 0;
+
   let confidence, confLabel;
   if (coverage === 0) { confidence = 0; confLabel = 'no data'; }
   else if (coverage < 0.25) { confidence = 1; confLabel = 'early estimate'; }
@@ -753,14 +748,14 @@ function subjectStats(si) {
   else if (coverage < 0.75) { confidence = 3; confLabel = 'moderately reliable'; }
   else if (coverage < 1.0) { confidence = 4; confLabel = 'high confidence'; }
   else { confidence = 5; confLabel = 'fully graded'; }
+
   return {enteredWeight, totalWeight, coverage, projectedPct, qpi, letter, bestQPI, worstQPI, confLabel, confidence, weightedSum, completedWeight};
 }
 
-// Compute overall QPI
 function overallStats() {
   let totalUnits = 0, totalQP = 0, enteredUnits = 0;
   let bestQP = 0, worstQP = 0;
-  const partialSubjects = [];
+
   SUBJECTS.forEach((subj, si) => {
     const st = subjectStats(si);
     const fullUnits = subj.units;
@@ -768,16 +763,17 @@ function overallStats() {
       totalQP += st.qpi * fullUnits;
       totalUnits += fullUnits;
       enteredUnits += fullUnits * st.coverage;
-      partialSubjects.push(si);
     }
     bestQP += st.bestQPI * fullUnits;
-    worstQP += (st.qpi !== null ? st.qpi : 0) * fullUnits;
+    worstQP += st.worstQPI * fullUnits;
   });
+
   const fullUnitsTotal = SUBJECTS.reduce((s,x) => s+x.units, 0);
   const semQPI = totalUnits > 0 ? totalQP / totalUnits : null;
   const bestQPI = bestQP / fullUnitsTotal;
   const worstQPI = worstQP / fullUnitsTotal;
   const overallCoverage = enteredUnits / fullUnitsTotal;
+
   let confLabel;
   if (overallCoverage === 0) confLabel = 'no data yet';
   else if (overallCoverage < 0.2) confLabel = 'early estimate — too soon to tell';
@@ -785,6 +781,7 @@ function overallStats() {
   else if (overallCoverage < 0.65) confLabel = 'moderately reliable — picture is forming';
   else if (overallCoverage < 0.9) confLabel = 'high confidence — mostly locked in';
   else confLabel = 'fully graded — this is your semester';
+
   return {semQPI, bestQPI, worstQPI, totalUnits, totalQP, overallCoverage, confLabel, enteredUnits};
 }
 
@@ -792,7 +789,6 @@ function buildUI() {
   const tabsEl = document.getElementById('tabs');
   const panelsEl = document.getElementById('panels');
   SUBJECTS.forEach((subj, si) => {
-    // Tab
     const btn = document.createElement('button');
     btn.className = 'tab-btn' + (si===0?' active':'');
     btn.id = `tab-${si}`;
@@ -800,7 +796,6 @@ function buildUI() {
     btn.innerHTML = `<span class="t-code">${subj.code}</span><span class="t-name">${subj.shortCode}</span><span class="t-grade" id="tab-grade-${si}">—</span>`;
     tabsEl.appendChild(btn);
 
-    // Panel
     const panel = document.createElement('div');
     panel.className = 'subject-panel' + (si===0?' active':'');
     panel.id = `panel-${si}`;
@@ -920,6 +915,7 @@ function updateSubject(si) {
     const scoreEl = document.getElementById(`score-${si}-${ri}`);
     if (currentMode === 'scenario') scoreEl.classList.add('scenario-mode');
     else scoreEl.classList.remove('scenario-mode');
+
     if (raw !== null && max > 0) {
       const pct = Math.min(100, (raw / max) * 100);
       const weighted = pct * (req.weight / 100);
@@ -928,8 +924,10 @@ function updateSubject(si) {
       wEl.textContent = weighted.toFixed(1) + '%';
       wEl.className = 'weighted-val filled';
     } else {
-      pctEl.textContent = '—'; pctEl.className = 'score-pct';
-      wEl.textContent = '—'; wEl.className = 'weighted-val';
+      pctEl.textContent = '—';
+      pctEl.className = 'score-pct';
+      wEl.textContent = '—';
+      wEl.className = 'weighted-val';
     }
   });
 
@@ -942,11 +940,15 @@ function updateSubject(si) {
   const covLabel = document.getElementById(`cov-label-${si}`);
 
   if (st.coverage === 0) {
-    qpiEl.textContent = '—'; qpiEl.style.color = 'var(--ink)';
-    letEl.textContent = '—'; letEl.style.background='var(--bg3)'; letEl.style.color='var(--text3)';
+    qpiEl.textContent = '—';
+    qpiEl.style.color = 'var(--ink)';
+    letEl.textContent = '—';
+    letEl.style.background='var(--bg3)';
+    letEl.style.color='var(--text3)';
     confEl.textContent = 'no data';
     covEl.textContent = '0% of grade entered';
-    covFill.style.width = '0%'; covFill.className = 'cov-fill low';
+    covFill.style.width = '0%';
+    covFill.className = 'cov-fill low';
     covVal.textContent = '0%';
     covLabel.innerHTML = `You've entered <strong>0%</strong> of this subject's graded components`;
   } else {
@@ -993,12 +995,14 @@ function renderNeedPanel(si) {
   const st = subjectStats(si);
   panel.style.display = 'block';
 
-  const targets = [
-    {label:'A (4.00)', minPct:92, grade:'A'},
-    {label:'B+ (3.50)', minPct:87, grade:'B+'},
-    {label:'B (3.00)', minPct:83, grade:'B'},
-    {label:'C+ (2.50)', minPct:79, grade:'C+'},
-  ];
+  const scale = getGradeScale(si);
+  const targets = scale
+    .filter(g => ['A', 'B+', 'B', 'C+'].includes(g.letter))
+    .map(g => ({
+      label: `${g.letter} (${g.qpi.toFixed(2)})`,
+      minPct: g.min,
+      grade: g.letter
+    }));
 
   const remainingWeight = subj.requirements.reduce((acc, req, ri) => {
     return getScores(si, ri) === null ? acc + req.weight : acc;
@@ -1006,7 +1010,7 @@ function renderNeedPanel(si) {
 
   let html = `<h3>🎯 What do I need to hit each grade?</h3><div class="need-grid">`;
   targets.forEach(t => {
-    const needed = t.minPct * (st.totalWeight / 100) - (st.weightedSum);
+    const needed = t.minPct * (st.totalWeight / 100) - st.weightedSum;
     const neededOnRemaining = remainingWeight > 0 ? (needed / remainingWeight) * 100 : null;
 
     let score, desc, feas;
@@ -1023,7 +1027,6 @@ function renderNeedPanel(si) {
       desc = `Would need ${neededOnRemaining.toFixed(0)}% avg on remaining — over max.`;
       feas = 'feas-impossible';
     } else {
-      const max = maxScores[si];
       const nextUnfilled = subj.requirements.findIndex((r, ri) => getScores(si, ri) === null);
       const nextReq = nextUnfilled >= 0 ? subj.requirements[nextUnfilled] : null;
       const nextMax = nextUnfilled >= 0 ? maxScores[si][nextUnfilled] : null;
@@ -1032,8 +1035,13 @@ function renderNeedPanel(si) {
       desc = nextReq ? `Next: ${nextReq.name} → need ~${nextScore}/${nextMax}` : 'Spread across remaining requirements';
       feas = neededOnRemaining <= 70 ? 'feas-easy' : neededOnRemaining <= 85 ? 'feas-doable' : neededOnRemaining <= 95 ? 'feas-tough' : 'feas-extreme';
     }
+
     const feasLabel = {
-      'feas-easy':'Achievable 💚','feas-doable':'Doable 💙','feas-tough':'Tough 💛','feas-extreme':'Very hard 🔴','feas-impossible':'Not possible ⚫'
+      'feas-easy':'Achievable 💚',
+      'feas-doable':'Doable 💙',
+      'feas-tough':'Tough 💛',
+      'feas-extreme':'Very hard 🔴',
+      'feas-impossible':'Not possible ⚫'
     }[feas];
 
     html += `<div class="need-card">
@@ -1059,8 +1067,8 @@ function updateAll() {
     qpiEl.className = 'number blue';
   }
 
-  document.getElementById('dm-qpi').textContent = ov.semQPI ? ov.semQPI.toFixed(3) : '—';
-  document.getElementById('dm-qpi-sub').textContent = ov.semQPI
+  document.getElementById('dm-qpi').textContent = ov.semQPI !== null ? ov.semQPI.toFixed(3) : '—';
+  document.getElementById('dm-qpi-sub').textContent = ov.semQPI !== null
     ? (ov.semQPI >= FIRST_HONORS_MIN
         ? '🎉 First Honors range'
         : ov.semQPI >= SECOND_HONORS_MIN
@@ -1071,14 +1079,14 @@ function updateAll() {
     : 'not enough data';
 
   document.getElementById('dm-units').textContent = Math.round(ov.enteredUnits) + '/20';
-  document.getElementById('dm-qp').textContent = ov.semQPI ? (ov.semQPI * ov.totalUnits).toFixed(2) : '—';
+  document.getElementById('dm-qp').textContent = ov.semQPI !== null ? (ov.semQPI * ov.totalUnits).toFixed(2) : '—';
 
   const scoredCount = SUBJECTS.filter((_,si) => subjectStats(si).coverage > 0).length;
   const fullCount = SUBJECTS.filter((_,si) => subjectStats(si).coverage === 1).length;
   document.getElementById('dm-subj').textContent = scoredCount + '/7';
   document.getElementById('dm-subj-sub').textContent = fullCount + ' fully graded';
 
-  document.getElementById('dm-best').textContent = ov.semQPI ? ov.bestQPI.toFixed(2) : '—';
+  document.getElementById('dm-best').textContent = ov.semQPI !== null ? ov.bestQPI.toFixed(2) : '—';
 
   const covPct = Math.round(ov.overallCoverage * 100);
   document.getElementById('dash-coverage').textContent = covPct + '%';
@@ -1090,7 +1098,10 @@ function updateAll() {
   SUBJECTS.forEach((s, si) => {
     const st = subjectStats(si);
     const opportunity = s.units * (1 - st.coverage);
-    if (opportunity > maxOpportunity) { maxOpportunity = opportunity; maxOppIdx = si; }
+    if (opportunity > maxOpportunity) {
+      maxOpportunity = opportunity;
+      maxOppIdx = si;
+    }
   });
   document.getElementById('dm-impact').textContent = maxOppIdx >= 0 ? SUBJECTS[maxOppIdx].shortCode : '—';
   document.getElementById('dm-impact-sub').textContent = maxOppIdx >= 0 ? 'most ungraded weight' : '';
@@ -1107,28 +1118,32 @@ function updateHonorBanner(semQPI, bestQPI, coverage) {
   const hs1 = document.getElementById('hs-1st'), hs2 = document.getElementById('hs-2nd'), hsN = document.getElementById('hs-none');
 
   if (semQPI === null) {
-    pill.className = 'honor-pill none'; pill.textContent = '○ Enter your scores';
+    pill.className = 'honor-pill none';
+    pill.textContent = '○ Enter your scores';
     msg.innerHTML = 'Start filling in your grades below — each subject has individual requirements you can score.';
     [d1,d2].forEach(d => d.className='h-dot gray');
     [hs1,hs2,hsN].forEach(h => { h.textContent='—'; h.className='hrow-status status-gray'; });
     return;
   }
   if (semQPI >= FIRST_HONORS_MIN) {
-    pill.className = 'honor-pill first'; pill.textContent = '★ First Honors — Dean\'s List';
+    pill.className = 'honor-pill first';
+    pill.textContent = '★ First Honors — Dean\'s List';
     msg.innerHTML = `<strong>You're on track for First Honors.</strong> ${coverage < 0.5 ? 'Still early — keep maintaining this pace.' : coverage < 0.8 ? "You're doing great. Stay focused on remaining outputs." : "Almost there. Your hard work is showing."}`;
     d1.className='h-dot green'; d2.className='h-dot green';
     hs1.textContent='On track'; hs1.className='hrow-status status-green';
     hs2.textContent='On track'; hs2.className='hrow-status status-green';
     hsN.textContent='Not applicable'; hsN.className='hrow-status status-gray';
   } else if (semQPI >= SECOND_HONORS_MIN) {
-    pill.className = 'honor-pill second'; pill.textContent = '◆ Second Honors';
+    pill.className = 'honor-pill second';
+    pill.textContent = '◆ Second Honors';
     msg.innerHTML = `<strong>You're in Second Honors territory.</strong> First Honors (${FIRST_HONORS_MIN.toFixed(2)}) is ${(FIRST_HONORS_MIN - semQPI).toFixed(3)} QPI away — ${coverage < 0.5 ? "still very reachable!" : "tough but worth pushing for."}`;
     d1.className='h-dot yellow'; d2.className='h-dot green';
     hs1.textContent='Near'; hs1.className='hrow-status status-yellow';
     hs2.textContent='On track'; hs2.className='hrow-status status-green';
     hsN.textContent='Not applicable'; hsN.className='hrow-status status-gray';
   } else {
-    pill.className = 'honor-pill near'; pill.textContent = '△ Within reach';
+    pill.className = 'honor-pill near';
+    pill.textContent = '△ Within reach';
     msg.innerHTML = `<strong>You're ${(SECOND_HONORS_MIN - semQPI).toFixed(3)} away from Second Honors.</strong> ${coverage < 0.5 ? "There's still plenty of room to push your grades up." : "Focus on your highest-weight remaining requirements."}`;
     d1.className='h-dot gray'; d2.className='h-dot yellow';
     hs1.textContent='Not yet'; hs1.className='hrow-status status-gray';
@@ -1143,6 +1158,7 @@ function updateGapAnalysis(ov) {
     el.innerHTML = `<div class="gap-item"><span class="gap-icon">💡</span><div class="gap-content"><div class="gap-title">Start entering your scores</div><div class="gap-body">Once you've entered some grades, we'll show you exactly what you need from your remaining requirements and subjects to hit each honors threshold.</div></div></div>`;
     return;
   }
+
   const fullUnits = 20;
   const ungraded = SUBJECTS.filter((_,si) => subjectStats(si).coverage < 1);
   const ungradedUnits = ungraded.reduce((s,x) => s+x.units, 0);
@@ -1163,15 +1179,18 @@ function updateGapAnalysis(ov) {
     if (ov.semQPI >= g.target) {
       title = `You're on track for ${g.label} ✓`;
       body = `Your current projected QPI of ${ov.semQPI.toFixed(3)} already meets the ${g.target.toFixed(2)} threshold. Just maintain your pace.`;
-      statusClass = 'status-green'; status = 'Achieved';
+      statusClass = 'status-green';
+      status = 'Achieved';
     } else if (neededPerUnit === null || ungradedUnits === 0) {
       title = `${g.label} — not achievable this semester`;
       body = `All grades are in and your QPI of ${ov.semQPI.toFixed(3)} falls short. Focus on the cumulative QPI for next sem.`;
-      statusClass = 'status-gray'; status = 'Locked out';
+      statusClass = 'status-gray';
+      status = 'Locked out';
     } else if (neededPerUnit > 4.0) {
       title = `${g.label} is out of reach this semester`;
       body = `Even with perfect scores on everything remaining, your QPI won't reach ${g.target.toFixed(2)}. Focus on next semester.`;
-      statusClass = 'status-red'; status = 'Not possible';
+      statusClass = 'status-red';
+      status = 'Not possible';
     } else {
       const gradeLabel = neededPerUnit >= 3.87 ? 'Summa-level (near-perfect) work' :
                          neededPerUnit >= 3.70 ? 'mostly A grades' :
@@ -1183,6 +1202,7 @@ function updateGapAnalysis(ov) {
       statusClass = neededPerUnit <= 3.0 ? 'status-green' : neededPerUnit <= 3.5 ? 'status-yellow' : 'status-red';
       status = difficulty;
     }
+
     html += `<div class="gap-item">
       <span class="gap-icon">${g.emoji}</span>
       <div class="gap-content">
@@ -1231,7 +1251,8 @@ function updateInsights(ov) {
   });
 
   if (maxOppSi >= 0) {
-    const s = SUBJECTS[maxOppSi]; const st = subjectStats(maxOppSi);
+    const s = SUBJECTS[maxOppSi];
+    const st = subjectStats(maxOppSi);
     insights.push(`<div class="insight-chip focus"><span class="ic-emoji">🎯</span><strong>Biggest opportunity: ${s.shortCode}</strong><br>${Math.round((1-st.coverage)*100)}% of its grade is still open — high leverage.</div>`);
   }
   if (highestQPISi >= 0 && subjectStats(highestQPISi).coverage > 0.2) {
@@ -1246,7 +1267,7 @@ function updateInsights(ov) {
     const s = SUBJECTS[mostLockedSi];
     insights.push(`<div class="insight-chip"><span class="ic-emoji">🔒</span><strong>${s.shortCode} is mostly locked in</strong><br>${Math.round(mostLockedCov*100)}% graded — not much left to change here.</div>`);
   }
-  if (ov.semQPI && ov.bestQPI - ov.semQPI > 0.2) {
+  if (ov.semQPI !== null && ov.bestQPI - ov.semQPI > 0.2) {
     insights.push(`<div class="insight-chip"><span class="ic-emoji">🚀</span><strong>You have upside</strong><br>Best case is ${ov.bestQPI.toFixed(2)} if you ace all remaining — that's ${(ov.bestQPI - ov.semQPI).toFixed(2)} above current.</div>`);
   }
 
@@ -1259,19 +1280,25 @@ function setMode(mode) {
     document.getElementById(`mode-${m}`).classList.toggle('active', m === mode);
   });
   document.getElementById('scenario-notice').style.display = mode === 'scenario' ? 'block' : 'none';
+
   SUBJECTS.forEach((_,si) => {
     const np = document.getElementById(`need-panel-${si}`);
     if (np) np.style.display = mode === 'need' ? 'block' : 'none';
+
     SUBJECTS[si].requirements.forEach((_, ri) => {
       const el = document.getElementById(`score-${si}-${ri}`);
       if (!el) return;
-      const val = mode === 'scenario' ? (scenarioScores[si][ri] ?? actualScores[si][ri]) : actualScores[si][ri];
+      const val = mode === 'scenario'
+        ? (scenarioScores[si][ri] ?? actualScores[si][ri])
+        : actualScores[si][ri];
       el.value = val !== null ? val : '';
       if (mode === 'scenario') el.classList.add('scenario-mode');
       else el.classList.remove('scenario-mode');
     });
+
     updateSubject(si);
   });
+
   if (mode === 'need') {
     SUBJECTS.forEach((_,si) => renderNeedPanel(si));
   }
