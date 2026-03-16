@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GradeMapper — ADMU QPI</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf8f4;
+  --bg2: #f3f0ea;
+  --bg3: #ebe7de;
+  --surface: #ffffff;
+  --surface2: #faf8f4;
+  --border: rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.14);
+  --text: #1a1814;
+  --text2: #6b6560;
+  --text3: #a09b94;
+  --ink: #2c2820;
+
+  /* status colors */
+  --green: #2d7a4f;
+  --green-bg: #edf7f1;
+  --green-border: rgba(45,122,79,0.2);
+  --yellow: #8a6200;
+  --yellow-bg: #fdf6e3;
+  --yellow-border: rgba(138,98,0,0.2);
+  --red: #b03a2e;
+  --red-bg: #fdf0ee;
+  --red-border: rgba(176,58,46,0.2);
+  --blue: #1a5fa8;
+  --blue-bg: #eef4fd;
+  --blue-border: rgba(26,95,168,0.2);
+  --purple: #6b3fa0;
+  --purple-bg: #f5f0fb;
+  --purple-border: rgba(107,63,160,0.2);
+
+  --accent: #e8520a;
+  --accent-light: #fff2ec;
+
+  --radius: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* DECORATIVE BG */
+body::before {
+  content: '';
+  position: fixed;
+  top: -200px; right: -200px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(232,82,10,0.06) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -150px; left: -150px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(26,95,168,0.05) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+
+.app { position: relative; z-index: 1; max-width: 1040px; margin: 0 auto; padding: 2rem 1.25rem 5rem; }
+
+/* ===== HEADER ===== */
+.site-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem;
+}
+.logo { display: flex; align-items: baseline; gap: 8px; }
+.logo-mark {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem; font-weight: 700;
+  color: var(--accent); letter-spacing: -0.03em;
+  line-height: 1;
+}
+.logo-sub { font-size: 12px; color: var(--text3); font-family: 'DM Mono', monospace; }
+.header-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip {
+  font-size: 11px; font-family: 'DM Mono', monospace;
+  padding: 4px 10px; border-radius: 20px;
+  background: var(--bg3); color: var(--text2);
+  border: 1px solid var(--border); letter-spacing: 0.04em;
+}
+
+/* ===== DASHBOARD ===== */
+.dashboard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 1.75rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+}
+.dashboard-top {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.5rem; align-items: start;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.qpi-big { text-align: center; }
+.qpi-big .label {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text3); font-family: 'DM Mono', monospace; margin-bottom: 4px;
+}
+.qpi-big .number {
+  font-family: 'Fraunces', serif; font-size: 4rem;
+  font-weight: 700; line-height: 1; letter-spacing: -0.04em;
+  color: var(--ink); transition: color 0.4s;
+}
+.qpi-big .number.green { color: var(--green); }
+.qpi-big .number.yellow { color: var(--yellow); }
+.qpi-big .number.red { color: var(--red); }
+.qpi-big .number.blue { color: var(--blue); }
+
+.status-block { flex: 1; }
+.honor-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 20px;
+  font-size: 13px; font-weight: 600;
+  margin-bottom: 8px; border: 1px solid transparent;
+}
+.honor-pill.first { background: var(--green-bg); color: var(--green); border-color: var(--green-border); }
+.honor-pill.second { background: var(--blue-bg); color: var(--blue); border-color: var(--blue-border); }
+.honor-pill.near { background: var(--yellow-bg); color: var(--yellow); border-color: var(--yellow-border); }
+.honor-pill.none { background: var(--bg3); color: var(--text2); border-color: var(--border); }
+.status-message { font-size: 14px; color: var(--text2); line-height: 1.5; }
+.status-message strong { color: var(--text); }
+
+.confidence-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-family: 'DM Mono', monospace;
+  padding: 3px 10px; border-radius: 20px;
+  background: var(--bg3); color: var(--text3);
+  border: 1px solid var(--border); margin-top: 6px;
+}
+.confidence-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* Dashboard metric row */
+.dash-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden;
+}
+.dash-metric { background: var(--bg2); padding: 1rem 1.25rem; }
+.dash-metric .m-label { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+.dash-metric .m-val { font-size: 1.3rem; font-weight: 700; font-family: 'Fraunces', serif; color: var(--ink); }
+.dash-metric .m-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.dash-metric.highlight { background: var(--accent-light); }
+.dash-metric.highlight .m-val { color: var(--accent); }
+
+/* Insight strip */
+.insight-strip {
+  margin-top: 1.25rem;
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.insight-chip {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 12px; color: var(--text2);
+  line-height: 1.4;
+  flex: 1; min-width: 180px;
+}
+.insight-chip .ic-emoji { font-size: 14px; margin-right: 4px; }
+.insight-chip strong { color: var(--text); }
+.insight-chip.focus { background: #fff8f5; border-color: rgba(232,82,10,0.2); color: var(--accent); }
+.insight-chip.focus strong { color: var(--accent); }
+
+/* ===== TABS ===== */
+.nav-section { margin-bottom: 1rem; }
+.nav-label { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+.tabs-scroll { overflow-x: auto; padding-bottom: 4px; }
+.tabs {
+  display: flex; gap: 6px;
+  min-width: max-content;
+}
+.tab-btn {
+  display: flex; flex-direction: column; align-items: flex-start;
+  padding: 10px 14px; border: 1px solid var(--border);
+  background: var(--surface); border-radius: var(--radius);
+  cursor: pointer; transition: all 0.2s;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  min-width: 120px;
+}
+.tab-btn:hover { background: var(--bg2); border-color: var(--border2); }
+.tab-btn.active { background: var(--ink); border-color: var(--ink); }
+.tab-btn .t-code { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text3); letter-spacing: 0.06em; }
+.tab-btn.active .t-code { color: rgba(255,255,255,0.5); }
+.tab-btn .t-name { font-size: 12px; font-weight: 600; color: var(--text); margin-top: 1px; }
+.tab-btn.active .t-name { color: white; }
+.tab-btn .t-grade {
+  font-size: 11px; font-family: 'DM Mono', monospace;
+  margin-top: 5px; padding: 2px 8px; border-radius: 5px;
+  background: var(--bg3); color: var(--text3);
+}
+.tab-btn.active .t-grade { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.8); }
+.tab-btn .t-grade.g-green { background: var(--green-bg); color: var(--green); }
+.tab-btn .t-grade.g-yellow { background: var(--yellow-bg); color: var(--yellow); }
+.tab-btn .t-grade.g-red { background: var(--red-bg); color: var(--red); }
+.tab-btn.active .t-grade.g-green { background: rgba(45,122,79,0.3); color: #7fffa8; }
+.tab-btn.active .t-grade.g-yellow { background: rgba(255,200,0,0.2); color: #ffd966; }
+.tab-btn.active .t-grade.g-red { background: rgba(255,100,80,0.2); color: #ff9988; }
+
+/* MODE TOGGLE */
+.mode-bar {
+  display: flex; gap: 6px; margin-bottom: 1.25rem;
+  background: var(--bg2); border: 1px solid var(--border);
+  padding: 4px; border-radius: var(--radius); width: fit-content;
+}
+.mode-btn {
+  padding: 7px 16px; border: none; background: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px; font-weight: 500; cursor: pointer;
+  border-radius: 9px; color: var(--text2); transition: all 0.2s;
+}
+.mode-btn:hover { color: var(--text); }
+.mode-btn.active {
+  background: var(--surface); color: var(--text);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  border: 1px solid var(--border);
+}
+
+/* ===== SUBJECT PANEL ===== */
+.subject-panel { display: none; }
+.subject-panel.active { display: block; }
+
+.subj-shell {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+
+.subj-head {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 1rem; flex-wrap: wrap;
+}
+.subj-info .s-code { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; }
+.subj-info .s-title { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 500; line-height: 1.2; margin-top: 2px; }
+.subj-info .s-instr { font-size: 12px; color: var(--text2); margin-top: 4px; }
+.subj-info .s-units {
+  display: inline-block; font-size: 11px; font-family: 'DM Mono', monospace;
+  background: var(--bg3); color: var(--text3); padding: 2px 10px;
+  border-radius: 20px; margin-top: 6px;
+}
+
+.subj-grade-block { text-align: right; min-width: 120px; }
+.subj-grade-block .sg-label { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; text-transform: uppercase; margin-bottom: 2px; }
+.subj-grade-block .sg-qpi { font-family: 'Fraunces', serif; font-size: 3rem; font-weight: 700; line-height: 1; letter-spacing: -0.03em; color: var(--ink); transition: color 0.3s; }
+.subj-grade-block .sg-letter { display: inline-block; font-size: 12px; font-family: 'DM Mono', monospace; font-weight: 500; padding: 2px 10px; border-radius: 6px; margin-top: 4px; }
+.subj-grade-block .sg-confidence { font-size: 11px; color: var(--text3); margin-top: 4px; font-family: 'DM Mono', monospace; }
+.subj-grade-block .sg-coverage { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+/* Coverage bar */
+.coverage-bar-wrap { padding: 0 1.5rem 1rem; border-bottom: 1px solid var(--border); background: var(--bg2); }
+.cov-header { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; margin-bottom: 6px; font-size: 12px; color: var(--text2); }
+.cov-val { font-family: 'DM Mono', monospace; font-weight: 500; color: var(--text); }
+.cov-track { height: 6px; background: var(--bg3); border-radius: 4px; overflow: hidden; position: relative; }
+.cov-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; background: var(--blue); }
+.cov-fill.full { background: var(--green); }
+.cov-fill.high { background: var(--blue); }
+.cov-fill.med { background: var(--yellow); }
+.cov-fill.low { background: var(--red); }
+
+/* Requirement rows */
+.reqs-table { width: 100%; }
+.req-header-row {
+  display: grid; gap: 10px;
+  padding: 10px 1.5rem;
+  font-size: 11px; color: var(--text3);
+  font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--border); background: var(--bg2);
+}
+.req-data-row {
+  display: grid; gap: 10px; align-items: center;
+  padding: 11px 1.5rem;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.req-data-row:last-child { border-bottom: none; }
+.req-data-row:hover { background: var(--bg2); }
+
+/* grid: name / impact-bar / max-input / score-input / pct / weighted */
+.req-grid { grid-template-columns: 1fr 80px 70px 110px 55px 60px; }
+
+.req-name-wrap .rn { font-size: 13px; color: var(--text); font-weight: 500; }
+.req-name-wrap .rw-tag {
+  font-size: 10px; font-family: 'DM Mono', monospace;
+  padding: 1px 7px; border-radius: 4px; margin-left: 5px;
+  display: inline-block;
+}
+
+/* Impact bar */
+.impact-wrap { display: flex; align-items: center; gap: 5px; }
+.impact-bar-track { flex: 1; height: 5px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+.impact-bar-fill { height: 100%; border-radius: 3px; background: var(--blue); transition: width 0.3s; }
+.impact-label { font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; white-space: nowrap; }
+
+/* Inputs */
+.score-input-wrap { display: flex; align-items: center; gap: 4px; }
+.score-input {
+  width: 62px; background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: 8px; color: var(--text); font-family: 'DM Mono', monospace;
+  font-size: 13px; padding: 5px 8px; text-align: center;
+  transition: border-color 0.2s, background 0.2s; outline: none;
+  -moz-appearance: textfield;
+}
+.score-input::-webkit-outer-spin-button,
+.score-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.score-input:focus { border-color: var(--accent); background: var(--surface); }
+.score-input.scenario-mode { background: #fff8f5; border-color: rgba(232,82,10,0.3); }
+.score-input.scenario-mode:focus { border-color: var(--accent); }
+.max-input {
+  width: 58px; background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: 8px; color: var(--text); font-family: 'DM Mono', monospace;
+  font-size: 13px; padding: 5px 8px; text-align: center;
+  transition: border-color 0.2s; outline: none;
+  -moz-appearance: textfield;
+}
+.max-input::-webkit-outer-spin-button,
+.max-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.max-input:focus { border-color: var(--purple); background: var(--surface); }
+.slash-sep { font-size: 11px; color: var(--text3); }
+
+.score-pct { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text2); text-align: center; }
+.score-pct.filled { color: var(--text); font-weight: 500; }
+.weighted-val { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text3); text-align: right; }
+.weighted-val.filled { color: var(--accent); font-weight: 500; }
+
+/* scenario diff */
+.scenario-diff { font-size: 10px; font-family: 'DM Mono', monospace; }
+.scenario-diff.up { color: var(--green); }
+.scenario-diff.down { color: var(--red); }
+
+/* ===== WHAT DO I NEED PANEL ===== */
+.need-panel { padding: 1.5rem; border-top: 1px solid var(--border); background: var(--bg2); }
+.need-panel h3 { font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 500; margin-bottom: 12px; color: var(--ink); }
+.need-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.need-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1rem;
+}
+.need-card .nc-target { font-size: 12px; color: var(--text2); margin-bottom: 6px; }
+.need-card .nc-target strong { color: var(--text); }
+.need-card .nc-score {
+  font-family: 'DM Mono', monospace; font-size: 1.4rem; font-weight: 500; line-height: 1;
+}
+.need-card .nc-desc { font-size: 11px; color: var(--text3); margin-top: 4px; }
+.need-card .nc-feasibility {
+  font-size: 11px; font-weight: 600; margin-top: 6px;
+  padding: 2px 8px; border-radius: 5px; display: inline-block; font-family: 'DM Mono', monospace;
+}
+.feas-easy { background: var(--green-bg); color: var(--green); }
+.feas-doable { background: var(--blue-bg); color: var(--blue); }
+.feas-tough { background: var(--yellow-bg); color: var(--yellow); }
+.feas-extreme { background: var(--red-bg); color: var(--red); }
+.feas-impossible { background: var(--bg3); color: var(--text3); }
+
+/* ===== SCENARIO MODE ===== */
+.scenario-bar {
+  background: #fff8f5; border: 1px solid rgba(232,82,10,0.2);
+  border-radius: var(--radius); padding: 10px 1.5rem;
+  display: flex; align-items: center; gap: 12px;
+  font-size: 13px; color: var(--accent);
+  flex-wrap: wrap;
+}
+.scenario-bar strong { font-weight: 600; }
+.scenario-clear { font-size: 12px; cursor: pointer; text-decoration: underline; color: var(--text2); }
+.scenario-badge {
+  font-size: 11px; font-family: 'DM Mono', monospace;
+  background: rgba(232,82,10,0.12); color: var(--accent);
+  padding: 2px 8px; border-radius: 5px;
+}
+
+/* ===== RISK METER ===== */
+.risk-meter-wrap { padding: 0 1.5rem 1.25rem; }
+.risk-label { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; margin-top: 12px; }
+.risk-track { height: 8px; border-radius: 5px; background: linear-gradient(to right, var(--green), #aadd44, #f5c842, #f08030, var(--red)); overflow: hidden; position: relative; margin-bottom: 4px; }
+.risk-indicator { position: absolute; top: -3px; width: 14px; height: 14px; background: var(--ink); border-radius: 50%; border: 2px solid white; transform: translateX(-50%); transition: left 0.5s ease; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+.risk-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); font-family: 'DM Mono', monospace; }
+
+/* ===== HONORS SECTION ===== */
+.honors-section { margin-top: 2.5rem; }
+.section-title { font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+.section-sub { font-size: 12px; color: var(--text2); margin-bottom: 1.25rem; }
+.honors-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.honors-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+.honors-card h4 { font-size: 12px; color: var(--text2); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; font-family: 'DM Mono', monospace; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.hrow { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; font-size: 13px; border-bottom: 1px solid var(--border); gap: 8px; }
+.hrow:last-child { border-bottom: none; }
+.hrow-name { display: flex; align-items: center; gap: 7px; color: var(--text); }
+.hrow-range { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text3); }
+.hrow-status { font-size: 11px; font-family: 'DM Mono', monospace; padding: 2px 8px; border-radius: 5px; white-space: nowrap; }
+.status-green { background: var(--green-bg); color: var(--green); }
+.status-yellow { background: var(--yellow-bg); color: var(--yellow); }
+.status-red { background: var(--red-bg); color: var(--red); }
+.status-gray { background: var(--bg3); color: var(--text3); }
+.h-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.h-dot.green { background: var(--green); }
+.h-dot.yellow { background: var(--yellow); }
+.h-dot.red { background: var(--red); }
+.h-dot.gray { background: var(--text3); }
+
+/* Gap analysis */
+.gap-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-top: 1rem; }
+.gap-card h4 { font-size: 12px; color: var(--text2); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; font-family: 'DM Mono', monospace; margin-bottom: 1rem; }
+.gap-item { display: flex; gap: 1rem; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+.gap-item:last-child { border-bottom: none; }
+.gap-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.gap-content { flex: 1; }
+.gap-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.gap-body { font-size: 12px; color: var(--text2); line-height: 1.5; }
+.gap-status { font-size: 11px; font-family: 'DM Mono', monospace; padding: 2px 8px; border-radius: 5px; white-space: nowrap; margin-left: auto; flex-shrink: 0; }
+
+/* Disclaimer */
+.disclaimer { background: var(--purple-bg); border: 1px solid var(--purple-border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-top: 1rem; font-size: 12px; color: var(--purple); line-height: 1.6; }
+.disclaimer strong { font-weight: 600; }
+
+@media (max-width: 640px) {
+  .honors-grid { grid-template-columns: 1fr; }
+  .dashboard-top { grid-template-columns: 1fr; }
+  .req-grid { grid-template-columns: 1fr 100px 80px; }
+  .req-header-row.req-grid span:nth-child(n+4),
+  .req-data-row.req-grid > *:nth-child(n+4) { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="site-header">
+    <div class="logo">
+      <span class="logo-mark">GradeMapper</span>
+      <span class="logo-sub">for ADMU</span>
+    </div>
+    <div class="header-chips">
+      <span class="chip">SY 2025–2026</span>
+      <span class="chip">2nd Semester</span>
+      <span class="chip">Loyola Schools</span>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard">
+    <div class="dashboard-top">
+      <div class="qpi-big">
+        <div class="label">Projected QPI</div>
+        <div class="number blue" id="dash-qpi">—</div>
+      </div>
+      <div class="status-block">
+        <div id="honor-pill" class="honor-pill none">○ Enter your scores</div>
+        <div class="status-message" id="status-msg">Start filling in your grades below. Each subject has individual requirements you can score.</div>
+        <div class="confidence-tag" id="confidence-tag"><span class="dot"></span><span id="conf-text">No data yet</span></div>
+      </div>
+      <div style="text-align:right; min-width:100px;">
+        <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Coverage</div>
+        <div style="font-family:'Fraunces',serif;font-size:2rem;font-weight:700;color:var(--ink);" id="dash-coverage">0%</div>
+        <div style="font-size:11px;color:var(--text3);" id="dash-coverage-sub">0 of 20 units entered</div>
+      </div>
+    </div>
+    <div class="dash-metrics">
+      <div class="dash-metric highlight">
+        <div class="m-label">Semestral QPI</div>
+        <div class="m-val" id="dm-qpi">—</div>
+        <div class="m-sub" id="dm-qpi-sub">—</div>
+      </div>
+      <div class="dash-metric">
+        <div class="m-label">Total units</div>
+        <div class="m-val" id="dm-units">20</div>
+        <div class="m-sub">this semester</div>
+      </div>
+      <div class="dash-metric">
+        <div class="m-label">Quality points</div>
+        <div class="m-val" id="dm-qp">—</div>
+        <div class="m-sub">grade × units</div>
+      </div>
+      <div class="dash-metric">
+        <div class="m-label">Subjects scored</div>
+        <div class="m-val" id="dm-subj">0/7</div>
+        <div class="m-sub" id="dm-subj-sub">0 fully graded</div>
+      </div>
+      <div class="dash-metric">
+        <div class="m-label">Best-case QPI</div>
+        <div class="m-val" id="dm-best">—</div>
+        <div class="m-sub">if you ace the rest</div>
+      </div>
+      <div class="dash-metric">
+        <div class="m-label">Highest-impact</div>
+        <div class="m-val" id="dm-impact">—</div>
+        <div class="m-sub" id="dm-impact-sub">most room to grow</div>
+      </div>
+    </div>
+    <div class="insight-strip" id="insight-strip">
+      <div class="insight-chip"><span class="ic-emoji">👋</span>Select a subject tab below to start entering scores.</div>
+    </div>
+  </div>
+
+  <!-- SUBJECT NAVIGATION -->
+  <div class="nav-section">
+    <div class="nav-label">Your subjects</div>
+    <div class="tabs-scroll"><div class="tabs" id="tabs"></div></div>
+  </div>
+
+  <!-- MODE BAR -->
+  <div style="display:flex; align-items:center; gap:12px; margin-bottom:1.25rem; flex-wrap:wrap;">
+    <div class="mode-bar">
+      <button class="mode-btn active" id="mode-actual" onclick="setMode('actual')">📊 Actual scores</button>
+      <button class="mode-btn" id="mode-scenario" onclick="setMode('scenario')">🎲 Scenario mode</button>
+      <button class="mode-btn" id="mode-need" onclick="setMode('need')">🎯 What do I need?</button>
+    </div>
+    <div id="scenario-notice" style="display:none;">
+      <div class="scenario-bar">
+        <span class="scenario-badge">SCENARIO</span>
+        <strong>Hypothetical mode on</strong> — scores won't be saved. Tweak away!
+        <span class="scenario-clear" onclick="clearScenario()">Clear hypotheticals</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBJECT PANELS -->
+  <div id="panels"></div>
+
+  <!-- HONORS SECTION -->
+  <div class="honors-section">
+    <div class="section-title">Honors tracker</div>
+    <div class="section-sub">Semestral standing is computed from your projected QPI this semester. Latin honors are cumulative — this is just one piece of the picture.</div>
+    <div class="honors-grid">
+      <div class="honors-card">
+        <h4>Semestral honors</h4>
+        <div class="hrow">
+          <span class="hrow-name"><span class="h-dot" id="dot-1st"></span>First Honors / Dean's List</span>
+          <span class="hrow-range">≥ 3.70</span>
+          <span class="hrow-status status-gray" id="hs-1st">—</span>
+        </div>
+        <div class="hrow">
+          <span class="hrow-name"><span class="h-dot" id="dot-2nd"></span>Second Honors</span>
+          <span class="hrow-range">3.50 – 3.69</span>
+          <span class="hrow-status status-gray" id="hs-2nd">—</span>
+        </div>
+        <div class="hrow">
+          <span class="hrow-name"><span class="h-dot gray"></span>No semestral honors</span>
+          <span class="hrow-range">&lt; 3.50</span>
+          <span class="hrow-status status-gray" id="hs-none">—</span>
+        </div>
+      </div>
+      <div class="honors-card">
+        <h4>Latin honors (cumulative, graduation)</h4>
+        <div class="hrow"><span class="hrow-name"><span class="h-dot green"></span>Summa Cum Laude</span><span class="hrow-range">≥ 3.87</span></div>
+        <div class="hrow"><span class="hrow-name"><span class="h-dot green"></span>Magna Cum Laude</span><span class="hrow-range">3.70 – 3.86</span></div>
+        <div class="hrow"><span class="hrow-name"><span class="h-dot yellow"></span>Cum Laude</span><span class="hrow-range">3.50 – 3.69</span></div>
+        <div class="hrow"><span class="hrow-name"><span class="h-dot gray"></span>Honorable Mention</span><span class="hrow-range">3.35 – 3.49</span></div>
+      </div>
+    </div>
+
+    <div class="gap-card">
+      <h4>Gap analysis — what it takes</h4>
+      <div id="gap-content">
+        <div class="gap-item">
+          <span class="gap-icon">💡</span>
+          <div class="gap-content">
+            <div class="gap-title">Start entering your scores</div>
+            <div class="gap-body">Once you've entered some grades, we'll show you exactly what you need from your remaining requirements and subjects to hit each honors threshold.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      <strong>A note on how this works:</strong> GradeMapper projects your grade based on completed requirements only — using their proportional weights. The more requirements you enter, the more accurate the estimate. Latin honors (Cum Laude, Magna, Summa) are based on your <em>cumulative QPI</em> across all semesters at ADMU, not just this one. The Economics Honors Program may have specific retention requirements (typically ≥ 3.00/sem) — check with your department. This app is a planning tool, not an official grade record.
+    </div>
+  </div>
+</div>
+
+<script>
+const SUBJECTS = [
+  {
+    code:"MATH 31.1", shortCode:"MATH31.1", name:"Mathematical Analysis IA", instructor:"Ray Yap", units:3,
+    requirements:[
+      {name:"Long Exam 1", weight:30, defaultMax:120},
+      {name:"Long Exam 2", weight:30, defaultMax:120},
+      {name:"Quizzes & Homework", weight:40, defaultMax:160},
+    ],
+    note:"2 long exams (60%) + Quizzes/HW (40%). Scores are out of specified max."
+  },
+  {
+    code:"MATH 31.2", shortCode:"MATH31.2", name:"Mathematical Analysis IB", instructor:"Ray Yap", units:3,
+    requirements:[
+      {name:"Long Exam 1", weight:30, defaultMax:120},
+      {name:"Long Exam 2", weight:30, defaultMax:120},
+      {name:"Quizzes & Homework", weight:40, defaultMax:160},
+    ],
+    note:"Paired class with MATH 31.1. See syllabus for paired grading rules."
+  },
+  {
+    code:"PEPC 11.05", shortCode:"PEPC", name:"Functional Training", instructor:"Monica L. Chavez", units:2,
+    requirements:[
+      {name:"Mobility Flow Test", weight:10, defaultMax:50},
+      {name:"Loaded Carry Test", weight:15, defaultMax:50},
+      {name:"TGU Test", weight:20, defaultMax:50},
+      {name:"Group Report", weight:10, defaultMax:50},
+      {name:"Infographic", weight:5, defaultMax:50},
+      {name:"100 Rep Routine Test", weight:25, defaultMax:50},
+      {name:"Class Participation", weight:15, defaultMax:50},
+    ],
+    note:"Each test scored out of 50 (rubric). Class uses 92-100=A scale."
+  },
+  {
+    code:"SOC SC 11", shortCode:"SOCSC", name:"Understanding the Self", instructor:"Jean Arielle K. Bactat", units:3,
+    requirements:[
+      {name:"Quizzes (Modules 1–4)", weight:40, defaultMax:100},
+      {name:"Do Good Project", weight:10, defaultMax:100},
+      {name:"Creative Journal / Final Paper", weight:20, defaultMax:100},
+      {name:"Class Participation", weight:10, defaultMax:100},
+      {name:"Binhi Program", weight:20, defaultMax:100},
+    ],
+    note:"Major assessments 50% + Final Paper 20% + Participation 10% + Binhi 20%."
+  },
+  {
+    code:"THEO 11", shortCode:"THEO", name:"Faith, Spirituality & the Church", instructor:"Annelle G. Sabanal, PhD", units:3,
+    requirements:[
+      {name:"Faith Narrative", weight:20, defaultMax:100},
+      {name:"Worksheets & Quizzes", weight:20, defaultMax:100},
+      {name:"Written Quiz (Mere Christianity)", weight:5, defaultMax:100},
+      {name:"Group Work Exercises", weight:5, defaultMax:100},
+      {name:"Mid-term Exam", weight:20, defaultMax:100},
+      {name:"Group Exegetical Report", weight:20, defaultMax:100},
+      {name:"Reflection Paper", weight:10, defaultMax:100},
+    ],
+    note:"All requirements graded as percentage (out of 100) then weighted."
+  },
+  {
+    code:"ENGL 11", shortCode:"ENGL", name:"Purposive Communication", instructor:"Wilzen D. Bermoy, M.Ed.", units:3,
+    requirements:[
+      {name:"Process Activities (Modules 1–2)", weight:20, defaultMax:100},
+      {name:"Major Task 1: Personal Reflection Essay", weight:20, defaultMax:100},
+      {name:"Process Activities (Modules 3–5)", weight:30, defaultMax:100},
+      {name:"Major Task 2A: Proposal Essay", weight:20, defaultMax:100},
+      {name:"Major Task 2B: Multimodal Presentation", weight:10, defaultMax:100},
+    ],
+    note:"Process activities 50% + Major tasks 50%."
+  },
+  {
+    code:"FILI 12", shortCode:"FILI", name:"Malayuning Komunikasyon", instructor:"Alvin B. Yapan, PhD", units:3,
+    requirements:[
+      {name:"Kritikal na Pagsusulit — Modyul 1", weight:15, defaultMax:100},
+      {name:"Kritikal na Pagsusulit — Modyul 2", weight:15, defaultMax:100},
+      {name:"Kritikal na Pagsusulit — Modyul 3", weight:15, defaultMax:100},
+      {name:"Kritikal na Pagsusulit — Modyul 4", weight:15, defaultMax:100},
+      {name:"Sanaysay na Video (Group)", weight:20, defaultMax:100},
+      {name:"Pagsusulit & Pakikilahok", weight:20, defaultMax:100},
+    ],
+    note:"4 critical essays (60%) + Video Essay (20%) + Quizzes/Participation (20%)."
+  },
+];
+
+// State
+const actualScores = SUBJECTS.map(s => s.requirements.map(() => null));
+const scenarioScores = SUBJECTS.map(s => s.requirements.map(() => null));
+const maxScores = SUBJECTS.map(s => s.requirements.map((r,ri) => r.defaultMax));
+let currentMode = 'actual';
+let activeTab = 0;
+
+function getScores(si, ri) {
+  if (currentMode === 'scenario' && scenarioScores[si][ri] !== null) return scenarioScores[si][ri];
+  return actualScores[si][ri];
+}
+
+function pctToQPI(pct) {
+  if (pct >= 92) return 4.00;
+  if (pct >= 87) return 3.50;
+  if (pct >= 83) return 3.00;
+  if (pct >= 79) return 2.50;
+  if (pct >= 75) return 2.00;
+  if (pct >= 70) return 1.00;
+  return 0.00;
+}
+function pctToLetter(pct) {
+  if (pct >= 92) return 'A';
+  if (pct >= 87) return 'B+';
+  if (pct >= 83) return 'B';
+  if (pct >= 79) return 'C+';
+  if (pct >= 75) return 'C';
+  if (pct >= 70) return 'D';
+  return 'F';
+}
+function letterColor(l) {
+  const m = {'A':'green','B+':'green','B':'blue','C+':'yellow','C':'yellow','D':'red','F':'red'};
+  return m[l] || 'gray';
+}
+function qpiColor(q) {
+  if (q >= 3.70) return 'green';
+  if (q >= 3.50) return 'blue';
+  if (q >= 3.00) return 'yellow';
+  if (q > 0) return 'red';
+  return 'red';
+}
+
+// Compute per-subject stats
+function subjectStats(si) {
+  const subj = SUBJECTS[si];
+  let enteredWeight = 0, weightedSum = 0;
+  subj.requirements.forEach((req, ri) => {
+    const raw = getScores(si, ri);
+    const max = maxScores[si][ri];
+    if (raw !== null && max > 0) {
+      const pct = Math.min(100, (raw / max) * 100);
+      weightedSum += pct * (req.weight / 100);
+      enteredWeight += req.weight;
+    }
+  });
+  const totalWeight = subj.requirements.reduce((s,r) => s + r.weight, 0);
+  const coverage = enteredWeight / totalWeight; // 0–1
+  const projectedPct = enteredWeight > 0 ? (weightedSum / enteredWeight) * 100 : null;
+  const qpi = projectedPct !== null ? pctToQPI(projectedPct) : null;
+  const letter = projectedPct !== null ? pctToLetter(projectedPct) : null;
+  const completedWeight = weightedSum; // weighted % actually earned so far
+  // Best case: assume 100% on all remaining
+  const bestWeighted = weightedSum + (totalWeight - enteredWeight);
+  const bestPct = (bestWeighted / totalWeight) * 100;
+  const bestQPI = pctToQPI(bestPct);
+  // Worst case: assume 0 on remaining
+  const worstPct = (weightedSum / totalWeight) * 100;
+  const worstQPI = pctToQPI(worstPct);
+  // Confidence
+  let confidence, confLabel;
+  if (coverage === 0) { confidence = 0; confLabel = 'no data'; }
+  else if (coverage < 0.25) { confidence = 1; confLabel = 'early estimate'; }
+  else if (coverage < 0.50) { confidence = 2; confLabel = 'taking shape'; }
+  else if (coverage < 0.75) { confidence = 3; confLabel = 'moderately reliable'; }
+  else if (coverage < 1.0) { confidence = 4; confLabel = 'high confidence'; }
+  else { confidence = 5; confLabel = 'fully graded'; }
+  return {enteredWeight, totalWeight, coverage, projectedPct, qpi, letter, bestQPI, worstQPI, confLabel, confidence, weightedSum, completedWeight};
+}
+
+// Compute overall QPI
+function overallStats() {
+  let totalUnits = 0, totalQP = 0, enteredUnits = 0;
+  let bestQP = 0, worstQP = 0;
+  const partialSubjects = [];
+  SUBJECTS.forEach((subj, si) => {
+    const st = subjectStats(si);
+    const fullUnits = subj.units;
+    if (st.coverage > 0) {
+      totalQP += st.qpi * fullUnits;
+      totalUnits += fullUnits;
+      enteredUnits += fullUnits * st.coverage;
+      partialSubjects.push(si);
+    }
+    bestQP += st.bestQPI * fullUnits;
+    worstQP += (st.qpi !== null ? st.qpi : 0) * fullUnits;
+  });
+  const fullUnitsTotal = SUBJECTS.reduce((s,x) => s+x.units, 0);
+  const semQPI = totalUnits > 0 ? totalQP / totalUnits : null;
+  const bestQPI = bestQP / fullUnitsTotal;
+  const worstQPI = worstQP / fullUnitsTotal;
+  const overallCoverage = enteredUnits / fullUnitsTotal;
+  let confLabel;
+  if (overallCoverage === 0) confLabel = 'no data yet';
+  else if (overallCoverage < 0.2) confLabel = 'early estimate — too soon to tell';
+  else if (overallCoverage < 0.4) confLabel = 'taking shape — check back as you get more grades';
+  else if (overallCoverage < 0.65) confLabel = 'moderately reliable — picture is forming';
+  else if (overallCoverage < 0.9) confLabel = 'high confidence — mostly locked in';
+  else confLabel = 'fully graded — this is your semester';
+  return {semQPI, bestQPI, worstQPI, totalUnits, totalQP, overallCoverage, confLabel, enteredUnits};
+}
+
+function buildUI() {
+  const tabsEl = document.getElementById('tabs');
+  const panelsEl = document.getElementById('panels');
+  SUBJECTS.forEach((subj, si) => {
+    // Tab
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (si===0?' active':'');
+    btn.id = `tab-${si}`;
+    btn.onclick = () => switchTab(si);
+    btn.innerHTML = `<span class="t-code">${subj.code}</span><span class="t-name">${subj.shortCode}</span><span class="t-grade" id="tab-grade-${si}">—</span>`;
+    tabsEl.appendChild(btn);
+
+    // Panel
+    const panel = document.createElement('div');
+    panel.className = 'subject-panel' + (si===0?' active':'');
+    panel.id = `panel-${si}`;
+    panel.innerHTML = buildSubjectPanel(si);
+    panelsEl.appendChild(panel);
+  });
+}
+
+function buildSubjectPanel(si) {
+  const subj = SUBJECTS[si];
+  const maxW = Math.max(...subj.requirements.map(r => r.weight));
+  const reqs = subj.requirements.map((req, ri) => `
+    <div class="req-data-row req-grid" id="row-${si}-${ri}">
+      <div class="req-name-wrap">
+        <span class="rn">${req.name}</span>
+        <span class="rw-tag" style="background:rgba(26,95,168,0.08);color:var(--blue);">${req.weight}%</span>
+      </div>
+      <div class="impact-wrap">
+        <div class="impact-bar-track"><div class="impact-bar-fill" style="width:${(req.weight/maxW)*100}%"></div></div>
+        <span class="impact-label">${req.weight >= maxW*0.7 ? '🔥 high' : req.weight >= maxW*0.4 ? 'mid' : 'low'}</span>
+      </div>
+      <div>
+        <input class="max-input" type="number" min="1" max="9999" value="${req.defaultMax}" id="max-${si}-${ri}" oninput="onMaxChange(${si},${ri},this.value)" title="Edit max score">
+        <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:2px;font-family:'DM Mono',monospace;">max pts</div>
+      </div>
+      <div class="score-input-wrap">
+        <input class="score-input" type="number" min="0" id="score-${si}-${ri}" placeholder="score" oninput="onScoreChange(${si},${ri},this.value)">
+        <span class="slash-sep">/ <span id="maxshow-${si}-${ri}">${req.defaultMax}</span></span>
+      </div>
+      <span class="score-pct" id="spct-${si}-${ri}">—</span>
+      <span class="weighted-val" id="sw-${si}-${ri}">—</span>
+    </div>`).join('');
+
+  return `
+  <div class="subj-shell">
+    <div class="subj-head">
+      <div class="subj-info">
+        <div class="s-code">${subj.code}</div>
+        <div class="s-title">${subj.name}</div>
+        <div class="s-instr">${subj.instructor}</div>
+        <span class="s-units">${subj.units} units</span>
+      </div>
+      <div class="subj-grade-block">
+        <div class="sg-label">Projected grade</div>
+        <div class="sg-qpi" id="sg-qpi-${si}">—</div>
+        <div><span class="sg-letter" id="sg-letter-${si}" style="background:var(--bg3);color:var(--text3);">—</span></div>
+        <div class="sg-confidence" id="sg-conf-${si}">no data</div>
+        <div class="sg-coverage" id="sg-cov-${si}">0% of grade entered</div>
+      </div>
+    </div>
+    <div class="coverage-bar-wrap">
+      <div class="cov-header">
+        <span id="cov-label-${si}">You've entered <strong>0%</strong> of this subject's graded components</span>
+        <span class="cov-val" id="cov-val-${si}">0%</span>
+      </div>
+      <div class="cov-track"><div class="cov-fill low" id="cov-fill-${si}" style="width:0%"></div></div>
+    </div>
+    <div class="reqs-table">
+      <div class="req-header-row req-grid">
+        <span>Requirement</span><span>Impact</span><span>Max pts</span><span>Your score</span><span>%</span><span style="text-align:right">Weighted</span>
+      </div>
+      ${reqs}
+    </div>
+    <div class="risk-meter-wrap">
+      <div class="risk-label">Subject risk meter</div>
+      <div class="risk-track"><div class="risk-indicator" id="risk-ind-${si}" style="left:50%"></div></div>
+      <div class="risk-labels"><span>Safe</span><span>Borderline</span><span>At risk</span></div>
+    </div>
+    <div id="need-panel-${si}" class="need-panel" style="display:none;"></div>
+  </div>`;
+}
+
+function onMaxChange(si, ri, val) {
+  const num = parseFloat(val);
+  if (!isNaN(num) && num > 0) {
+    maxScores[si][ri] = num;
+    document.getElementById(`maxshow-${si}-${ri}`).textContent = num;
+    const scoreEl = document.getElementById(`score-${si}-${ri}`);
+    scoreEl.max = num;
+    // clamp existing score
+    const existing = currentMode === 'scenario' ? scenarioScores[si][ri] : actualScores[si][ri];
+    if (existing !== null && existing > num) {
+      if (currentMode === 'scenario') scenarioScores[si][ri] = num;
+      else actualScores[si][ri] = num;
+      scoreEl.value = num;
+    }
+  }
+  updateSubject(si);
+  updateAll();
+}
+
+function onScoreChange(si, ri, val) {
+  const num = val === '' ? null : parseFloat(val);
+  const max = maxScores[si][ri];
+  let clamped = num;
+  if (num !== null) {
+    if (isNaN(num) || num < 0) clamped = null;
+    else if (num > max) {
+      clamped = max;
+      document.getElementById(`score-${si}-${ri}`).value = max;
+    }
+  }
+  if (currentMode === 'scenario') scenarioScores[si][ri] = clamped;
+  else actualScores[si][ri] = clamped;
+  updateSubject(si);
+  updateAll();
+}
+
+function updateSubject(si) {
+  const subj = SUBJECTS[si];
+  const st = subjectStats(si);
+
+  // Per-row updates
+  subj.requirements.forEach((req, ri) => {
+    const raw = getScores(si, ri);
+    const max = maxScores[si][ri];
+    const pctEl = document.getElementById(`spct-${si}-${ri}`);
+    const wEl = document.getElementById(`sw-${si}-${ri}`);
+    const scoreEl = document.getElementById(`score-${si}-${ri}`);
+    if (currentMode === 'scenario') scoreEl.classList.add('scenario-mode');
+    else scoreEl.classList.remove('scenario-mode');
+    if (raw !== null && max > 0) {
+      const pct = Math.min(100, (raw / max) * 100);
+      const weighted = pct * (req.weight / 100);
+      pctEl.textContent = pct.toFixed(1) + '%';
+      pctEl.className = 'score-pct filled';
+      wEl.textContent = weighted.toFixed(1) + '%';
+      wEl.className = 'weighted-val filled';
+    } else {
+      pctEl.textContent = '—'; pctEl.className = 'score-pct';
+      wEl.textContent = '—'; wEl.className = 'weighted-val';
+    }
+  });
+
+  // Subject header
+  const qpiEl = document.getElementById(`sg-qpi-${si}`);
+  const letEl = document.getElementById(`sg-letter-${si}`);
+  const confEl = document.getElementById(`sg-conf-${si}`);
+  const covEl = document.getElementById(`sg-cov-${si}`);
+  const covFill = document.getElementById(`cov-fill-${si}`);
+  const covVal = document.getElementById(`cov-val-${si}`);
+  const covLabel = document.getElementById(`cov-label-${si}`);
+
+  if (st.coverage === 0) {
+    qpiEl.textContent = '—'; qpiEl.style.color = 'var(--ink)';
+    letEl.textContent = '—'; letEl.style.background='var(--bg3)'; letEl.style.color='var(--text3)';
+    confEl.textContent = 'no data';
+    covEl.textContent = '0% of grade entered';
+    covFill.style.width = '0%'; covFill.className = 'cov-fill low';
+    covVal.textContent = '0%';
+    covLabel.innerHTML = `You've entered <strong>0%</strong> of this subject's graded components`;
+  } else {
+    const pct = st.projectedPct;
+    const letter = st.letter;
+    const color = letterColor(letter);
+    const covPct = Math.round(st.coverage * 100);
+    qpiEl.textContent = st.qpi.toFixed(2);
+    qpiEl.style.color = `var(--${color})`;
+    letEl.textContent = letter;
+    letEl.style.background = `var(--${color}-bg, var(--bg3))`;
+    letEl.style.color = `var(--${color})`;
+    confEl.textContent = st.confLabel;
+    covEl.textContent = covPct + '% of grade entered';
+    covFill.style.width = covPct + '%';
+    covFill.className = `cov-fill ${covPct >= 80 ? 'full' : covPct >= 50 ? 'high' : covPct >= 30 ? 'med' : 'low'}`;
+    covVal.textContent = covPct + '%';
+    covLabel.innerHTML = `You've entered <strong>${covPct}%</strong> of this subject's graded components — ${st.confLabel}`;
+  }
+
+  // Tab grade
+  const tabGrade = document.getElementById(`tab-grade-${si}`);
+  if (st.letter) {
+    tabGrade.textContent = st.letter;
+    tabGrade.className = `t-grade g-${letterColor(st.letter)}`;
+  } else {
+    tabGrade.textContent = '—';
+    tabGrade.className = 't-grade';
+  }
+
+  // Risk meter
+  const riskInd = document.getElementById(`risk-ind-${si}`);
+  if (st.coverage > 0) {
+    const qpi = st.qpi;
+    const risk = qpi >= 3.70 ? 5 : qpi >= 3.50 ? 20 : qpi >= 3.00 ? 40 : qpi >= 2.00 ? 65 : 85;
+    riskInd.style.left = risk + '%';
+  } else {
+    riskInd.style.left = '50%';
+  }
+
+  // What do I need
+  if (currentMode === 'need') renderNeedPanel(si);
+}
+
+function renderNeedPanel(si) {
+  const panel = document.getElementById(`need-panel-${si}`);
+  const subj = SUBJECTS[si];
+  const st = subjectStats(si);
+  panel.style.display = 'block';
+
+  const targets = [
+    {label:'A (4.00)', minPct:92, grade:'A'},
+    {label:'B+ (3.50)', minPct:87, grade:'B+'},
+    {label:'B (3.00)', minPct:83, grade:'B'},
+    {label:'C+ (2.50)', minPct:79, grade:'C+'},
+  ];
+
+  const remainingWeight = subj.requirements.reduce((acc, req, ri) => {
+    return getScores(si, ri) === null ? acc + req.weight : acc;
+  }, 0);
+
+  let html = `<h3>🎯 What do I need to hit each grade?</h3><div class="need-grid">`;
+  targets.forEach(t => {
+    const needed = t.minPct * (st.totalWeight / 100) - (st.weightedSum);
+    const neededOnRemaining = remainingWeight > 0 ? (needed / remainingWeight) * 100 : null;
+
+    let score, desc, feas;
+    if (st.projectedPct !== null && st.projectedPct >= t.minPct) {
+      score = 'Already on track';
+      desc = `Current projection: ${st.projectedPct.toFixed(1)}%`;
+      feas = 'feas-easy';
+    } else if (neededOnRemaining === null || remainingWeight === 0) {
+      score = 'Not possible';
+      desc = 'All requirements are entered.';
+      feas = 'feas-impossible';
+    } else if (neededOnRemaining > 100) {
+      score = 'Not achievable';
+      desc = `Would need ${neededOnRemaining.toFixed(0)}% avg on remaining — over max.`;
+      feas = 'feas-impossible';
+    } else {
+      const max = maxScores[si];
+      // Find next unfilled requirement
+      const nextUnfilled = subj.requirements.findIndex((r, ri) => getScores(si, ri) === null);
+      const nextReq = nextUnfilled >= 0 ? subj.requirements[nextUnfilled] : null;
+      const nextMax = nextUnfilled >= 0 ? maxScores[si][nextUnfilled] : null;
+      const nextScore = nextReq ? Math.ceil((neededOnRemaining / 100) * nextMax) : null;
+      score = neededOnRemaining <= 80 ? `~${neededOnRemaining.toFixed(0)}% avg remaining` : `${neededOnRemaining.toFixed(0)}% avg remaining`;
+      desc = nextReq ? `Next: ${nextReq.name} → need ~${nextScore}/${nextMax}` : 'Spread across remaining requirements';
+      feas = neededOnRemaining <= 70 ? 'feas-easy' : neededOnRemaining <= 85 ? 'feas-doable' : neededOnRemaining <= 95 ? 'feas-tough' : 'feas-extreme';
+    }
+    const feasLabel = {
+      'feas-easy':'Achievable 💚','feas-doable':'Doable 💙','feas-tough':'Tough 💛','feas-extreme':'Very hard 🔴','feas-impossible':'Not possible ⚫'
+    }[feas];
+
+    html += `<div class="need-card">
+      <div class="nc-target">To finish with <strong>${t.label}</strong></div>
+      <div class="nc-score ${feas === 'feas-impossible' ? 'style="color:var(--text3)"' : ''}">${score}</div>
+      <div class="nc-desc">${desc}</div>
+      <span class="nc-feasibility ${feas}">${feasLabel}</span>
+    </div>`;
+  });
+  html += `</div>`;
+  panel.innerHTML = html;
+}
+
+function updateAll() {
+  const ov = overallStats();
+
+  // Dashboard QPI
+  const qpiEl = document.getElementById('dash-qpi');
+  if (ov.semQPI !== null) {
+    qpiEl.textContent = ov.semQPI.toFixed(3);
+    qpiEl.className = `number ${qpiColor(ov.semQPI)}`;
+  } else {
+    qpiEl.textContent = '—';
+    qpiEl.className = 'number blue';
+  }
+
+  document.getElementById('dm-qpi').textContent = ov.semQPI ? ov.semQPI.toFixed(3) : '—';
+  document.getElementById('dm-qpi-sub').textContent = ov.semQPI ? (ov.semQPI >= 3.70 ? '🎉 First Honors range' : ov.semQPI >= 3.50 ? '👍 Second Honors range' : ov.semQPI >= 3.00 ? 'Above passing' : 'Below 3.00') : 'not enough data';
+  document.getElementById('dm-units').textContent = Math.round(ov.enteredUnits) + '/20';
+  document.getElementById('dm-qp').textContent = ov.semQPI ? (ov.semQPI * ov.totalUnits).toFixed(2) : '—';
+
+  const scoredCount = SUBJECTS.filter((_,si) => subjectStats(si).coverage > 0).length;
+  const fullCount = SUBJECTS.filter((_,si) => subjectStats(si).coverage === 1).length;
+  document.getElementById('dm-subj').textContent = scoredCount + '/7';
+  document.getElementById('dm-subj-sub').textContent = fullCount + ' fully graded';
+
+  document.getElementById('dm-best').textContent = ov.semQPI ? ov.bestQPI.toFixed(2) : '—';
+
+  const covPct = Math.round(ov.overallCoverage * 100);
+  document.getElementById('dash-coverage').textContent = covPct + '%';
+  document.getElementById('dash-coverage-sub').textContent = Math.round(ov.enteredUnits) + ' of 20 units';
+
+  document.getElementById('conf-text').textContent = ov.confLabel;
+
+  // Highest opportunity subject
+  let maxOpportunity = -1, maxOppIdx = -1;
+  SUBJECTS.forEach((s, si) => {
+    const st = subjectStats(si);
+    const opportunity = s.units * (1 - st.coverage);
+    if (opportunity > maxOpportunity) { maxOpportunity = opportunity; maxOppIdx = si; }
+  });
+  document.getElementById('dm-impact').textContent = maxOppIdx >= 0 ? SUBJECTS[maxOppIdx].shortCode : '—';
+  document.getElementById('dm-impact-sub').textContent = maxOppIdx >= 0 ? 'most ungraded weight' : '';
+
+  // Honor pill and status
+  updateHonorBanner(ov.semQPI, ov.bestQPI, ov.overallCoverage);
+  updateGapAnalysis(ov);
+  updateInsights(ov);
+}
+
+function updateHonorBanner(semQPI, bestQPI, coverage) {
+  const pill = document.getElementById('honor-pill');
+  const msg = document.getElementById('status-msg');
+  const d1 = document.getElementById('dot-1st'), d2 = document.getElementById('dot-2nd');
+  const hs1 = document.getElementById('hs-1st'), hs2 = document.getElementById('hs-2nd'), hsN = document.getElementById('hs-none');
+
+  if (semQPI === null) {
+    pill.className = 'honor-pill none'; pill.textContent = '○ Enter your scores';
+    msg.innerHTML = 'Start filling in your grades below — each subject has individual requirements you can score.';
+    [d1,d2].forEach(d => d.className='h-dot gray');
+    [hs1,hs2,hsN].forEach(h => { h.textContent='—'; h.className='hrow-status status-gray'; });
+    return;
+  }
+  if (semQPI >= 3.70) {
+    pill.className = 'honor-pill first'; pill.textContent = '★ First Honors — Dean\'s List';
+    msg.innerHTML = `<strong>You're on track for First Honors.</strong> ${coverage < 0.5 ? 'Still early — keep maintaining this pace.' : coverage < 0.8 ? "You're doing great. Stay focused on remaining outputs." : "Almost there. Your hard work is showing."}`;
+    d1.className='h-dot green'; d2.className='h-dot green';
+    hs1.textContent='On track'; hs1.className='hrow-status status-green';
+    hs2.textContent='On track'; hs2.className='hrow-status status-green';
+    hsN.textContent='Not applicable'; hsN.className='hrow-status status-gray';
+  } else if (semQPI >= 3.50) {
+    pill.className = 'honor-pill second'; pill.textContent = '◆ Second Honors';
+    msg.innerHTML = `<strong>You're in Second Honors territory.</strong> First Honors (3.70) is ${(3.70 - semQPI).toFixed(3)} QPI away — ${coverage < 0.5 ? "still very reachable!" : "tough but worth pushing for."}`;
+    d1.className='h-dot yellow'; d2.className='h-dot green';
+    hs1.textContent='Near'; hs1.className='hrow-status status-yellow';
+    hs2.textContent='On track'; hs2.className='hrow-status status-green';
+    hsN.textContent='Not applicable'; hsN.className='hrow-status status-gray';
+  } else if (semQPI >= 3.35) {
+    pill.className = 'honor-pill near'; pill.textContent = '△ Within reach';
+    msg.innerHTML = `<strong>You're ${(3.50 - semQPI).toFixed(3)} away from Second Honors.</strong> ${coverage < 0.5 ? "There's still plenty of room to push your grades up." : "Focus on your highest-weight remaining requirements."}`;
+    d1.className='h-dot gray'; d2.className='h-dot yellow';
+    hs1.textContent='Not yet'; hs1.className='hrow-status status-gray';
+    hs2.textContent='Close'; hs2.className='hrow-status status-yellow';
+    hsN.textContent='Current'; hsN.className='hrow-status status-yellow';
+  } else {
+    pill.className = 'honor-pill none'; pill.textContent = '○ QPI ' + semQPI.toFixed(3);
+    const bestMsg = bestQPI >= 3.50 ? " Best case: you can still reach Second Honors if you ace what's left." : "";
+    msg.innerHTML = `<strong>There's room to recover.</strong> ${coverage < 0.5 ? "You're still early — a strong second half can change this significantly." + bestMsg : "Focus on your heaviest remaining requirements to maximize impact." + bestMsg}`;
+    d1.className='h-dot gray'; d2.className='h-dot gray';
+    hs1.textContent='Not yet'; hs1.className='hrow-status status-red';
+    hs2.textContent='Not yet'; hs2.className='hrow-status status-red';
+    hsN.textContent='Current'; hsN.className='hrow-status status-red';
+  }
+}
+
+function updateGapAnalysis(ov) {
+  const el = document.getElementById('gap-content');
+  if (ov.semQPI === null) {
+    el.innerHTML = `<div class="gap-item"><span class="gap-icon">💡</span><div class="gap-content"><div class="gap-title">Start entering your scores</div><div class="gap-body">Once you've entered some grades, we'll show you exactly what you need from your remaining requirements and subjects to hit each honors threshold.</div></div></div>`;
+    return;
+  }
+  const fullUnits = 20;
+  const ungraded = SUBJECTS.filter((_,si) => subjectStats(si).coverage < 1);
+  const ungradedUnits = ungraded.reduce((s,x) => s+x.units, 0);
+
+  const gaps = [
+    {label:'First Honors / Dean\'s List', target:3.70, emoji:'🏆'},
+    {label:'Second Honors', target:3.50, emoji:'🎓'},
+    {label:'Cum Laude (cumulative)', target:3.50, emoji:'🎖️', note:'(cumulative — plan ahead)'},
+    {label:'Magna Cum Laude (cumulative)', target:3.70, emoji:'🏅', note:'(cumulative — plan ahead)'},
+  ];
+
+  let html = '';
+  gaps.slice(0,2).forEach(g => {
+    const needed = g.target * fullUnits - ov.semQPI * ov.totalUnits;
+    const neededPerUnit = ungradedUnits > 0 ? needed / ungradedUnits : null;
+
+    let title, body, statusClass, status;
+    if (ov.semQPI >= g.target) {
+      title = `You're on track for ${g.label} ✓`;
+      body = `Your current projected QPI of ${ov.semQPI.toFixed(3)} already meets the ${g.target} threshold. Just maintain your pace.`;
+      statusClass = 'status-green'; status = 'Achieved';
+    } else if (neededPerUnit === null || ungradedUnits === 0) {
+      title = `${g.label} — not achievable this semester`;
+      body = `All grades are in and your QPI of ${ov.semQPI.toFixed(3)} falls short. Focus on the cumulative QPI for next sem.`;
+      statusClass = 'status-gray'; status = 'Locked out';
+    } else if (neededPerUnit > 4.0) {
+      title = `${g.label} is out of reach this semester`;
+      body = `Even with perfect scores on everything remaining, your QPI won't reach ${g.target}. Focus on next semester.`;
+      statusClass = 'status-red'; status = 'Not possible';
+    } else {
+      const gradeLabel = neededPerUnit >= 3.87 ? 'Summa-level (near-perfect) work' :
+                         neededPerUnit >= 3.70 ? 'mostly A grades' :
+                         neededPerUnit >= 3.50 ? 'B+ average across remaining subjects' :
+                         neededPerUnit >= 3.00 ? 'solid B average' : 'passing work';
+      const difficulty = neededPerUnit >= 3.70 ? 'Challenging' : neededPerUnit >= 3.50 ? 'Doable' : 'Comfortable';
+      title = `${g.label} — ${neededPerUnit.toFixed(2)} QPI/unit needed`;
+      body = `You need roughly ${gradeLabel} in your remaining ${ungradedUnits} units. That means about ${neededPerUnit.toFixed(2)} quality points per unit on average. ${ov.overallCoverage < 0.4 ? 'You still have a lot of grade left to play with.' : 'The window is narrowing — focus on high-weight requirements.'}`;
+      statusClass = neededPerUnit <= 3.0 ? 'status-green' : neededPerUnit <= 3.5 ? 'status-yellow' : 'status-red';
+      status = difficulty;
+    }
+    html += `<div class="gap-item">
+      <span class="gap-icon">${g.emoji}</span>
+      <div class="gap-content">
+        <div class="gap-title">${title}</div>
+        <div class="gap-body">${body}</div>
+      </div>
+      <span class="gap-status ${statusClass}">${status}</span>
+    </div>`;
+  });
+
+  html += `<div class="gap-item" style="opacity:0.7">
+    <span class="gap-icon">📅</span>
+    <div class="gap-content">
+      <div class="gap-title">Latin honors: plan ahead</div>
+      <div class="gap-body">Cum Laude (≥3.50), Magna (≥3.70), Summa (≥3.87) are based on your <em>cumulative</em> QPI across all semesters — not just this one. This semester contributes to that average.</div>
+    </div>
+  </div>`;
+
+  el.innerHTML = html;
+}
+
+function updateInsights(ov) {
+  const strip = document.getElementById('insight-strip');
+  const insights = [];
+  const anyData = ov.overallCoverage > 0;
+
+  if (!anyData) {
+    strip.innerHTML = `<div class="insight-chip"><span class="ic-emoji">👋</span>Select a subject tab below to start entering scores.</div>`;
+    return;
+  }
+
+  // Find highest-opportunity subject (most units × least coverage)
+  let maxOpp = -1, maxOppSi = -1;
+  let lowestQPISi = -1, lowestQPI = 5;
+  let highestQPISi = -1, highestQPI = -1;
+  let mostLockedSi = -1, mostLockedCov = -1;
+
+  SUBJECTS.forEach((s, si) => {
+    const st = subjectStats(si);
+    if (st.coverage > 0) {
+      const opp = s.units * (1 - st.coverage);
+      if (opp > maxOpp) { maxOpp = opp; maxOppSi = si; }
+      if (st.qpi < lowestQPI) { lowestQPI = st.qpi; lowestQPISi = si; }
+      if (st.qpi > highestQPI) { highestQPI = st.qpi; highestQPISi = si; }
+      if (st.coverage > mostLockedCov) { mostLockedCov = st.coverage; mostLockedSi = si; }
+    }
+  });
+
+  if (maxOppSi >= 0) {
+    const s = SUBJECTS[maxOppSi]; const st = subjectStats(maxOppSi);
+    insights.push(`<div class="insight-chip focus"><span class="ic-emoji">🎯</span><strong>Biggest opportunity: ${s.shortCode}</strong><br>${Math.round((1-st.coverage)*100)}% of its grade is still open — high leverage.`);
+  }
+  if (highestQPISi >= 0 && subjectStats(highestQPISi).coverage > 0.2) {
+    const s = SUBJECTS[highestQPISi];
+    insights.push(`<div class="insight-chip"><span class="ic-emoji">💪</span><strong>${s.shortCode} is pulling you up</strong><br>Projected ${subjectStats(highestQPISi).qpi.toFixed(2)} QPI — your strongest subject right now.`);
+  }
+  if (lowestQPISi >= 0 && subjectStats(lowestQPISi).coverage > 0.2 && lowestQPI < 3.0) {
+    const s = SUBJECTS[lowestQPISi];
+    insights.push(`<div class="insight-chip"><span class="ic-emoji">⚠️</span><strong>${s.shortCode} needs attention</strong><br>Projected ${lowestQPI.toFixed(2)} QPI — your lowest right now. Check remaining requirements.`);
+  }
+  if (mostLockedSi >= 0 && mostLockedCov > 0.7) {
+    const s = SUBJECTS[mostLockedSi];
+    insights.push(`<div class="insight-chip"><span class="ic-emoji">🔒</span><strong>${s.shortCode} is mostly locked in</strong><br>${Math.round(mostLockedCov*100)}% graded — not much left to change here.`);
+  }
+  if (ov.semQPI && ov.bestQPI - ov.semQPI > 0.2) {
+    insights.push(`<div class="insight-chip"><span class="ic-emoji">🚀</span><strong>You have upside</strong><br>Best case is ${ov.bestQPI.toFixed(2)} if you ace all remaining — that's ${(ov.bestQPI - ov.semQPI).toFixed(2)} above current.`);
+  }
+
+  strip.innerHTML = insights.slice(0,4).map(i => i + '</div>').join('') || `<div class="insight-chip"><span class="ic-emoji">📊</span>Keep entering grades for personalized insights.</div>`;
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  ['actual','scenario','need'].forEach(m => {
+    document.getElementById(`mode-${m}`).classList.toggle('active', m === mode);
+  });
+  document.getElementById('scenario-notice').style.display = mode === 'scenario' ? 'block' : 'none';
+  SUBJECTS.forEach((_,si) => {
+    const np = document.getElementById(`need-panel-${si}`);
+    if (np) np.style.display = mode === 'need' ? 'block' : 'none';
+    // Sync score inputs to show scenario vs actual
+    SUBJECTS[si].requirements.forEach((_, ri) => {
+      const el = document.getElementById(`score-${si}-${ri}`);
+      if (!el) return;
+      const val = mode === 'scenario' ? (scenarioScores[si][ri] ?? actualScores[si][ri]) : actualScores[si][ri];
+      el.value = val !== null ? val : '';
+      if (mode === 'scenario') el.classList.add('scenario-mode');
+      else el.classList.remove('scenario-mode');
+    });
+    updateSubject(si);
+  });
+  if (mode === 'need') {
+    SUBJECTS.forEach((_,si) => renderNeedPanel(si));
+  }
+  updateAll();
+}
+
+function clearScenario() {
+  SUBJECTS.forEach((_,si) => {
+    SUBJECTS[si].requirements.forEach((_,ri) => {
+      scenarioScores[si][ri] = null;
+      const el = document.getElementById(`score-${si}-${ri}`);
+      if (el) el.value = actualScores[si][ri] !== null ? actualScores[si][ri] : '';
+    });
+    updateSubject(si);
+  });
+  updateAll();
+}
+
+function switchTab(si) {
+  SUBJECTS.forEach((_,i) => {
+    document.getElementById(`tab-${i}`).classList.toggle('active', i===si);
+    document.getElementById(`panel-${i}`).classList.toggle('active', i===si);
+  });
+  activeTab = si;
+  if (currentMode === 'need') renderNeedPanel(si);
+}
+
+buildUI();
+updateAll();
+</script>
+</body>
+</html>
